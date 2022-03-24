@@ -23,7 +23,7 @@
         ///     El estado del login, es decir, aceptado o rechazado
         /// </returns>
         /// <response code="202">Si las credenciales son validas</response>
-        /// <response code="404">Si las credenciales son invalidas </response>
+        /// <response code="401">Si las credenciales son invalidas </response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPost]
         [Route("iniciar-sesion")]
@@ -42,7 +42,7 @@
         ///     Estado del proceso de registro.
         /// </returns>
         /// <response code="202">Si las credenciales son validas para registrar</response>
-        /// <response code="404">Si las credenciales son invalidas para registrar</response>
+        /// <response code="400">Si las credenciales son invalidas para registrar</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPost]
         [Route("registrarse")]
@@ -62,7 +62,7 @@
         ///     Validacion correcta o denegada.
         /// </returns>
         /// <response code="200">Si las credenciales son validas para seguir en el proceso de registro</response>
-        /// <response code="404">Si las credenciales son invalidas para seguir en el proceso de registro</response>
+        /// <response code="400">Si las credenciales son invalidas para seguir en el proceso de registro</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPost]
         [Route("chequear-primer-paso-registro")]
@@ -82,7 +82,7 @@
         ///     Estado del proceso de finalizacion del envio de email.
         /// </returns>
         /// <response code="200">Si se ha enviado correctamente el codigo de validacion de cambio de contraseña</response>
-        /// <response code="404">Si las credenciales son invalidas para seguir en el proceso de registro</response>
+        /// <response code="400">Si no se ha podido enviar correctamente el codigo de validacion de cambio de contraseña</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpGet]
         [Route("recuperar-contraseña/{id}")]
@@ -101,7 +101,7 @@
         ///     Validacion correcta o incorrecta.
         /// </returns>
         /// <response code="200">Si el codigo de validacion es correcto</response>
-        /// <response code="404">Si el codigo de validacion es incorrecto</response>
+        /// <response code="400">Si el codigo de validacion es incorrecto</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPost]
         [Route("recuperar-contraseña")]
@@ -120,7 +120,7 @@
         ///     Estado del proceso de finalizacion del cambio de contraseña.
         /// </returns>
         /// <response code="200">Si la contraseña ha podido modificarse correctamente</response>
-        /// <response code="404">Si la contraseña no ha podido modificarse correctamente</response>
+        /// <response code="400">Si la contraseña no ha podido modificarse correctamente</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPatch]
         [Route("cambiar-contraseña")]
