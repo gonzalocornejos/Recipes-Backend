@@ -8,10 +8,6 @@ namespace recipes_backend.Data
 {
     public partial class DataContext : DbContext
     {
-        public DataContext()
-        {
-        }
-
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
@@ -28,21 +24,5 @@ namespace recipes_backend.Data
         public DbSet<Unidad> Unidad { get; set; }
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Utilizados> Utilizados { get; set; }
-
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-TK7UKT7\\LOCAL;Initial Catalog=recetas_dev;User ID=sa;Password=santiago;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
-            }
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            OnModelCreating(modelBuilder);
-        }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
