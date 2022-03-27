@@ -1,18 +1,19 @@
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
-using recipes_backend.Data;
-using recipes_backend.Helpers.Middleware;
-using recipes_backend.Services.Interfaces;
-using recipes_backend.Services;
-using recipes_backend.Repositories.Interfaces;
-using recipes_backend.Repositories;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using recipes_backend.Data;
 using recipes_backend.Helpers;
+using recipes_backend.Helpers.Middleware;
+using recipes_backend.Repositories;
+using recipes_backend.Repositories.Interfaces;
+using recipes_backend.Services;
+using recipes_backend.Services.Interfaces;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DataContext>(options => {
+builder.Services.AddDbContext<DataContext>(options =>
+{
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddControllers();
@@ -50,7 +51,7 @@ var mappingConfig = new MapperConfiguration(mc =>
 
 var mapper = mappingConfig.CreateMapper();
 services.AddSingleton(mapper);
-    
+
 
 var app = builder.Build();
 

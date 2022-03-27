@@ -43,8 +43,8 @@
 
         }
 
-        public Receta(Usuario usuario, string nombre, string descripcion, string foto, 
-            int porciones, int cantidadPersonas, TipoPlato tipoPlato): this()
+        public Receta(Usuario usuario, string nombre, string descripcion, string foto,
+            int porciones, int cantidadPersonas, TipoPlato tipoPlato) : this()
         {
             Usuario = usuario;
             Nombre = nombre;

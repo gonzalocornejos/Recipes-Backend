@@ -1,6 +1,5 @@
 ﻿namespace recipes_backend.Repositories
 {
-    using static recipes_backend.Helpers.Query.Type;
     using AutoMapper;
     using Dapper;
     using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@
     using recipes_backend.Helpers.Query;
     using recipes_backend.Repositories.Interfaces;
     using System.Threading.Tasks;
+    using static recipes_backend.Helpers.Query.Type;
 
     public class RecetaRepository : IRecetaRepository
     {
@@ -30,11 +30,12 @@
                            ORDER BY R.{pagedQuery.SortField} {pagedQuery.SortOrder}
                            OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY";
 
-            var parameters = new {
-                                    Nombre = pagedQuery.Filter.Nombre,
-                                    Offset = pagedQuery.PageSize * (pagedQuery.PageNumber - 1),
-                                    PageSize = pagedQuery.PageSize
-                                };
+            var parameters = new
+            {
+                Nombre = pagedQuery.Filter.Nombre,
+                Offset = pagedQuery.PageSize * (pagedQuery.PageNumber - 1),
+                PageSize = pagedQuery.PageSize
+            };
 
             var result = _dbContext.Database.GetDbConnection()
                             .Query<RecetaResultadoDTO>($"SELECT * {query}", parameters)

@@ -2,7 +2,6 @@
 {
     using recipes_backend.Models.Domain.Enums;
     using recipes_backend.Models.ORM;
-    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Usuario : Entity
     {
@@ -31,7 +30,7 @@
 
         }
 
-        public Usuario(string mail, string nickName, bool habilitado, string nombre, string avatar, TipoUsuario tipoUsuario) 
+        public Usuario(string mail, string nickName, bool habilitado, string nombre, string avatar, TipoUsuario tipoUsuario)
             : this()
         {
             Mail = mail;
