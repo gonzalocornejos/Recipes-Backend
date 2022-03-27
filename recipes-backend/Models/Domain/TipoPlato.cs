@@ -1,13 +1,20 @@
-﻿namespace recipes_backend.Models.Domain
+﻿using recipes_backend.Models.ORM;
+
+namespace recipes_backend.Models.Domain
 {
-    using System.ComponentModel.DataAnnotations;
-
-    public class TipoPlato
+    public class TipoPlato : Entity
     {
-        [Key]
-        public int Id { get; set; }
+        public string Descripcion { get; private set; }
 
-        public string Descripcion { get; set; }
+        protected TipoPlato()
+        {
 
+        }
+
+        public TipoPlato(string descripcion)
+            : this()
+        {
+            Descripcion = descripcion;
+        }
     }
 }

@@ -1,11 +1,20 @@
-﻿namespace recipes_backend.Models.Domain
-{
-    using System.ComponentModel.DataAnnotations;
-    public class Ingrediente
-    {
-        [Key]
-        public int Id { get; set; } 
+﻿using recipes_backend.Models.ORM;
 
-        public string Nombre { get; set; }
+namespace recipes_backend.Models.Domain
+{
+    public class Ingrediente : Entity
+    {
+        public string Nombre { get; private set; }
+
+        protected Ingrediente()
+        {
+
+        }
+
+        public Ingrediente(string nombre)
+            : this()
+        {
+            Nombre = nombre;
+        }
     }
 }

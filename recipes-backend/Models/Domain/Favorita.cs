@@ -1,11 +1,20 @@
 ﻿namespace recipes_backend.Models.Domain
 {
-    using System.ComponentModel.DataAnnotations;
-    public class Favorita
+    using recipes_backend.Models.ORM;
+    public class Favorita : Entity
     {
-        [Key]
-        public int Id { get; set; }
-        public Usuario Usuario { get; set; }
-        public Receta Recetas { get; set; }
+        public Usuario Usuario { get; private set; }
+        public Receta Recetas { get; private set; }
+
+        protected Favorita()
+        {
+
+        }
+
+        public Favorita(Usuario usuario, Receta recetas)
+        {
+            Usuario = usuario;
+            Recetas = recetas;
+        }
     }
 }

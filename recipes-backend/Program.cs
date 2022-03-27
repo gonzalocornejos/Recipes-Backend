@@ -20,7 +20,9 @@ builder.Services.AddControllers();
 
 var services = builder.Services;
 
-services.AddControllers();
+services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+); ;
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen(c =>
 {
@@ -48,6 +50,7 @@ var mappingConfig = new MapperConfiguration(mc =>
 
 var mapper = mappingConfig.CreateMapper();
 services.AddSingleton(mapper);
+    
 
 var app = builder.Build();
 

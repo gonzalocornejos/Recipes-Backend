@@ -4,7 +4,7 @@
 
 namespace recipes_backend.Migrations
 {
-    public partial class creandotablasprincipales : Migration
+    public partial class createder : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -98,13 +98,14 @@ namespace recipes_backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Foto = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Porciones = table.Column<int>(type: "int", nullable: false),
                     CantidadPersonas = table.Column<int>(type: "int", nullable: false),
-                    TipoPlatoId = table.Column<int>(type: "int", nullable: false)
+                    TipoPlatoId = table.Column<int>(type: "int", nullable: false),
+                    FavoritaId = table.Column<int>(type: "int", nullable: true),
+                    RecetaId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -116,11 +117,15 @@ namespace recipes_backend.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Receta_Usuario_UsuarioId",
-                        column: x => x.UsuarioId,
+                        name: "FK_Receta_Usuario_FavoritaId",
+                        column: x => x.FavoritaId,
                         principalTable: "Usuario",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Receta_Usuario_RecetaId",
+                        column: x => x.RecetaId,
+                        principalTable: "Usuario",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -173,30 +178,6 @@ namespace recipes_backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IngredienteReceta",
-                columns: table => new
-                {
-                    IngredientesId = table.Column<int>(type: "int", nullable: false),
-                    RecetasId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IngredienteReceta", x => new { x.IngredientesId, x.RecetasId });
-                    table.ForeignKey(
-                        name: "FK_IngredienteReceta_Ingrediente_IngredientesId",
-                        column: x => x.IngredientesId,
-                        principalTable: "Ingrediente",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_IngredienteReceta_Receta_RecetasId",
-                        column: x => x.RecetasId,
-                        principalTable: "Receta",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Paso",
                 columns: table => new
                 {
@@ -221,7 +202,8 @@ namespace recipes_backend.Migrations
                 name: "Utilizados",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RecetaId = table.Column<int>(type: "int", nullable: false),
                     IngredienteId = table.Column<int>(type: "int", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
@@ -299,11 +281,6 @@ namespace recipes_backend.Migrations
                 column: "RecetaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IngredienteReceta_RecetasId",
-                table: "IngredienteReceta",
-                column: "RecetasId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Multimedia_PasoId",
                 table: "Multimedia",
                 column: "PasoId");
@@ -314,14 +291,19 @@ namespace recipes_backend.Migrations
                 column: "RecetaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Receta_FavoritaId",
+                table: "Receta",
+                column: "FavoritaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Receta_RecetaId",
+                table: "Receta",
+                column: "RecetaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Receta_TipoPlatoId",
                 table: "Receta",
                 column: "TipoPlatoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Receta_UsuarioId",
-                table: "Receta",
-                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Utilizados_IngredienteId",
@@ -349,9 +331,6 @@ namespace recipes_backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Foto");
-
-            migrationBuilder.DropTable(
-                name: "IngredienteReceta");
 
             migrationBuilder.DropTable(
                 name: "Multimedia");

@@ -1,19 +1,30 @@
 ﻿namespace recipes_backend.Models.Domain
 {
     using recipes_backend.Models.Domain.Enums;
-    using System.ComponentModel.DataAnnotations;
+    using recipes_backend.Models.ORM;
 
-    public class Multimedia
+    public class Multimedia : Entity
     {
-        [Key]
-        public int Id { get; set; }
+        public Paso Paso { get; private set; }
 
-        public Paso Paso { get; set; }
+        public TipoContenido TipoContenido { get; private set; }
 
-        public TipoContenido TipoContenido { get; set; }
+        public string Extension { get; private set; }
 
-        public string Extension { get; set; }
+        public string UrlContenido { get; private set; }
 
-        public string UrlContenido { get; set; }
+        protected Multimedia()
+        {
+
+        }
+
+        public Multimedia(Paso paso, TipoContenido tipoContenido, string extension, string urlContenido)
+            : this()
+        {
+            Paso = paso;
+            TipoContenido = tipoContenido;
+            Extension = extension;
+            UrlContenido = urlContenido;
+        }
     }   
 }

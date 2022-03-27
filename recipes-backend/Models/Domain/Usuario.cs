@@ -1,27 +1,50 @@
 ﻿namespace recipes_backend.Models.Domain
 {
     using recipes_backend.Models.Domain.Enums;
-    using System.ComponentModel.DataAnnotations;
+    using recipes_backend.Models.ORM;
+    using System.ComponentModel.DataAnnotations.Schema;
 
-    public class Usuario
+    public class Usuario : Entity
     {
-        [Key]
-        public int Id { get; set; }
+        public string Mail { get; private set; }
 
-        public string Mail { get; set; }
+        public string NickName { get; private set; }
 
-        public string NickName { get; set; }
+        public bool Habilitado { get; private set; }
 
-        public bool Habilitado { get; set; }
+        public string Nombre { get; private set; }
 
-        public string Nombre { get; set; }
+        public string Avatar { get; private set; }
 
-        public string Avatar { get; set; }
+        public TipoUsuario TipoUsuario { get; private set; }
 
-        public TipoUsuario TipoUsuario { get; set; }
 
-        public List<Receta> Recetas { get;set; }
+        private readonly List<Receta> _recetas = new List<Receta>();
+        public IReadOnlyList<Receta> Recetas => _recetas.ToList();
 
-        public List<Favorita> Favoritas { get; set; }
+
+        private readonly List<Favorita> _favoritas = new List<Favorita>();
+        public IReadOnlyList<Favorita> Favoritas => _favoritas.ToList();
+
+        protected Usuario()
+        {
+
+        }
+
+        public Usuario(string mail, string nickName, bool habilitado, string nombre, string avatar, TipoUsuario tipoUsuario) 
+            : this()
+        {
+            Mail = mail;
+            NickName = nickName;
+            Habilitado = habilitado;
+            Nombre = nombre;
+            Avatar = avatar;
+            TipoUsuario = tipoUsuario;
+        }
+
+        public void AgregarReceta(Receta r)
+        {
+            _recetas.Add(r);
+        }
     }
 }

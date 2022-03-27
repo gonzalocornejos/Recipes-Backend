@@ -1,15 +1,25 @@
 ﻿namespace recipes_backend.Models.Domain
 {
-    using System.ComponentModel.DataAnnotations;
-    public class Foto
+    using recipes_backend.Models.ORM;
+    public class Foto : Entity
     {
-        [Key]
-        public int Id { get; set; }
+        public Receta Receta { get; private set; }
 
-        public Receta Receta { get; set; }
+        public string UrlFoto { get; private set; }
 
-        public string UrlFoto { get; set; }
+        public string Extension { get; private set; }
 
-        public string Extension { get; set; }
+        protected Foto()
+        {
+
+        }
+
+        public Foto(Receta receta, string urlFoto, string extension)
+            : this()
+        {
+            Receta = receta;
+            UrlFoto = urlFoto;
+            Extension = extension;
+        }
     }
 }

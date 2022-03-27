@@ -1,17 +1,28 @@
 ﻿namespace recipes_backend.Models.Domain
 {
-    using System.ComponentModel.DataAnnotations;
-    public class Paso
+    using recipes_backend.Models.ORM;
+    public class Paso : Entity
     {
-        [Key]
-        public int Id { get; set; }
+        public Receta Receta { get; private set; }
 
-        public Receta Receta { get; set; }
+        public int NroPaso { get; private set; }
 
-        public int NroPaso { get; set; }
+        public string Texto { get; private set; }
 
-        public string Texto { get; set; }
+        private readonly List<Multimedia> _multimedias = new List<Multimedia>();
+        public IReadOnlyList<Multimedia> Multimedias => _multimedias.ToList();
 
-        public List<Multimedia> Multimedias { get; set; }
+        protected Paso()
+        {
+
+        }
+
+        public Paso(Receta receta, int nroPaso, string texto)
+            : this()
+        {
+            Receta = receta;
+            NroPaso = nroPaso;
+            Texto = texto;
+        }
     }
 }

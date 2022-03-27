@@ -1,19 +1,32 @@
 ﻿namespace recipes_backend.Models.Domain
 {
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Calificacion
     {
         [Key]
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
-        public Usuario Usuario{ get; set; }
+        public Usuario Usuario{ get; private set; }
 
-        public Receta Receta { get; set; }
+        public Receta Receta { get; private set; }
 
-        public int Puntaje { get; set; }
+        public int Puntaje { get; private set; }
 
-        public string Comentarios{ get; set; }
+        public string Comentarios{ get; private set; }
+
+        private Calificacion()
+        {
+
+        }
+
+        public Calificacion(Usuario usuario, Receta receta, int puntaje, string comentarios) 
+            : this()
+        {
+            Usuario = usuario;
+            Receta = receta;
+            Puntaje = puntaje;
+            Comentarios = comentarios;
+        }
     }
 }
