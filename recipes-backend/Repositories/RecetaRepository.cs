@@ -1,12 +1,12 @@
 ﻿namespace recipes_backend.Repositories
 {
-    using AutoMapper;
     using Dapper;
     using Microsoft.EntityFrameworkCore;
     using recipes_backend.Data;
-    using recipes_backend.Dtos.Receta;
     using recipes_backend.Dtos.Receta.Query;
     using recipes_backend.Helpers.Query;
+    using recipes_backend.Models.Domain;
+    using recipes_backend.Models.ORM;
     using recipes_backend.Repositories.Interfaces;
     using System.Threading.Tasks;
     using static recipes_backend.Helpers.Query.Type;
@@ -14,12 +14,10 @@
     public class RecetaRepository : IRecetaRepository
     {
         private readonly DataContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public RecetaRepository(DataContext dbContext, IMapper mapper)
+        public RecetaRepository(DataContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
 
         public async Task<PagedQueryResult<RecetaResultadoDTO>> BuscarRecetas(PagedQuery<RecetaFiltroDTO> pagedQuery)
@@ -52,13 +50,11 @@
             };
         }
 
-        public async Task<RecetaInfoDTO> BuscarReceta(int recetaId)
+        public async Task<Receta> BuscarReceta(int recetaId)
         {
-            var receta = await _dbContext.Receta
+            return await _dbContext.Receta
                 .Where(r => r.Id == recetaId)
                 .FirstOrDefaultAsync();
-
-            return _mapper.Map<RecetaInfoDTO>(receta);
         }
     }
 }

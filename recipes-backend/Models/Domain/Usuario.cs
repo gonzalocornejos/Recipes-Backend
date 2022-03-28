@@ -41,9 +41,17 @@
             TipoUsuario = tipoUsuario;
         }
 
-        public void AgregarReceta(Receta r)
+        public void CrearReceta(string nombre, string descripcion, string foto,
+            int porciones, int cantidadPersonas, TipoPlato tipoPlato)
         {
-            _recetas.Add(r);
+            var receta = new Receta(this, nombre, descripcion, foto, 
+                porciones, cantidadPersonas, tipoPlato);
+            _recetas.Add(receta);
+        }
+
+        public void EliminarReceta(Receta recetaAEliminar)
+        {
+            _recetas.RemoveAll(receta => receta == recetaAEliminar);
         }
     }
 }

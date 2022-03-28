@@ -29,9 +29,13 @@
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<IActionResult> CrearReceta([FromBody] CrearRecetaDTO recetaDTO)
+        public async Task<IActionResult> CrearReceta([FromQuery] int userId,  [FromBody] CrearRecetaDTO recetaDTO)
         {
-            throw new NotImplementedException();
+            var result = await _recetaService.CrearReceta(userId, recetaDTO);
+            if(result.IsSuccess)
+                return Ok();
+
+            return BadRequest();
         }
 
         /// <summary>
@@ -47,9 +51,13 @@
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<IActionResult> EliminarReceta([FromQuery] int recetaId)
+        public async Task<IActionResult> EliminarReceta([FromQuery] int userId, [FromQuery] int recetaId)
         {
-            throw new NotImplementedException();
+            var result = await _recetaService.EliminarReceta(userId, recetaId);
+            if (result.IsSuccess)
+                return Ok();
+
+            return BadRequest();
         }
 
         /// <summary>
@@ -107,7 +115,7 @@
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> ObtenerReceta([FromQuery] int recetaId)
         {
-            var receta = await _recetaService.ObtenerRecetaAsync(recetaId);
+            var receta = await _recetaService.ObtenerRecetaInfoAsync(recetaId);
             return Ok(receta);
         }
 

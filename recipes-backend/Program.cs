@@ -42,6 +42,7 @@ services.AddScoped<IUsuarioService, UsuarioService>();
 // Repositories
 services.AddScoped<IRecetaRepository, RecetaRepository>();
 services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+services.AddScoped<ITipoPlatoRepository, TipoPlatoRepository>();
 
 // AutoMapper
 var mappingConfig = new MapperConfiguration(mc =>

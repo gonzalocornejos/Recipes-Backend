@@ -1,8 +1,9 @@
 ﻿namespace recipes_backend.Repositories.Interfaces
 {
-    using recipes_backend.Dtos.Receta;
     using recipes_backend.Dtos.Receta.Query;
     using recipes_backend.Helpers.Query;
+    using recipes_backend.Models.Domain;
+
     public interface IRecetaRepository
     {
         /// <summary>
@@ -22,6 +23,6 @@
         /// <returns>
         ///     Receta individual.
         /// </returns>
-        Task<RecetaInfoDTO> BuscarReceta(int recetaId);
+        Task<Receta> BuscarReceta(int recetaId);
     }
 }
