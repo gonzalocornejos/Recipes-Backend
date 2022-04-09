@@ -2,5 +2,7 @@
 {
     public class EditarRecetaDTO
     {
+        public int UsuarioId { get; set; }
+        public RecetaDTO RecetaEditada { get; set; }
     }
 }

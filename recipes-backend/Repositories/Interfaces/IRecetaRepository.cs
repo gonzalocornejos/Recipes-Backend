@@ -14,7 +14,7 @@
         /// <returns>
         ///     Listado de recetas con su respectivo paginado
         /// </returns>
-        Task<PagedQueryResult<RecetaResultadoDTO>> BuscarRecetas(PagedQuery<RecetaFiltroDTO> pagedQuery);
+        Task<PagedQueryResult<RecetaResultadoDTO>> BuscarRecetas(PagedQuery<RecetaFiltroParametrosDTO> pagedQuery);
 
         /// <summary>
         ///     Busca en la base de datos una receta individual.

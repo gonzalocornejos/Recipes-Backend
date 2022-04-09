@@ -2,6 +2,7 @@
 {
     using recipes_backend.Models.Domain.Enums;
     using recipes_backend.Models.ORM;
+    using System.Linq;
 
     public class Usuario : Entity
     {
@@ -52,6 +53,19 @@
         public void EliminarReceta(Receta recetaAEliminar)
         {
             _recetas.RemoveAll(receta => receta == recetaAEliminar);
+        }
+
+        public void ToggleFavorito(Receta receta)
+        {
+            var favorita = _favoritas
+                .Where(f => f.Receta == receta)
+                .FirstOrDefault();
+
+            if (favorita is null) {
+                _favoritas.Add(new Favorita(this, receta));
+                return;
+            }
+            _favoritas.Remove(favorita);
         }
     }
 }

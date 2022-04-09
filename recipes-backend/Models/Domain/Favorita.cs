@@ -4,17 +4,17 @@
     public class Favorita : Entity
     {
         public Usuario Usuario { get; private set; }
-        public Receta Recetas { get; private set; }
+        public Receta Receta { get; private set; }
 
         protected Favorita()
         {
 
         }
 
-        public Favorita(Usuario usuario, Receta recetas)
+        public Favorita(Usuario usuario, Receta receta)
         {
             Usuario = usuario;
-            Recetas = recetas;
+            Receta = receta;
         }
     }
 }

@@ -20,7 +20,7 @@
             _dbContext = dbContext;
         }
 
-        public async Task<PagedQueryResult<RecetaResultadoDTO>> BuscarRecetas(PagedQuery<RecetaFiltroDTO> pagedQuery)
+        public async Task<PagedQueryResult<RecetaResultadoDTO>> BuscarRecetas(PagedQuery<RecetaFiltroParametrosDTO> pagedQuery)
         {
             var query = $@"FROM Recetas R
                            WHERE 1 = 1 

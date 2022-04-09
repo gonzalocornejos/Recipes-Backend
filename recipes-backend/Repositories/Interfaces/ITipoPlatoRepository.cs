@@ -13,5 +13,7 @@
         ///     El tipo plato encontrado
         /// </returns>
         Task<TipoPlato> BuscarTipoPlato(int idTipoPlato);
+
+        Task<List<TipoPlato>> ObtenerTipoPlatos();
     }
 }

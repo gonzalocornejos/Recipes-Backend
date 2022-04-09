@@ -11,6 +11,7 @@
     public class RecetasController : ControllerBase
     {
         private readonly IRecetaService _recetaService;
+
         public RecetasController(IRecetaService recetaService)
         {
             _recetaService = recetaService;
@@ -32,10 +33,10 @@
         public async Task<IActionResult> CrearReceta([FromQuery] int userId,  [FromBody] CrearRecetaDTO recetaDTO)
         {
             var result = await _recetaService.CrearReceta(userId, recetaDTO);
-            if(result.IsSuccess)
+            if (result.IsSuccess)
                 return Ok();
 
-            return BadRequest();
+            return BadRequest(result.Error);
         }
 
         /// <summary>
@@ -57,7 +58,7 @@
             if (result.IsSuccess)
                 return Ok();
 
-            return BadRequest();
+            return BadRequest(result.Error);
         }
 
         /// <summary>
@@ -73,9 +74,13 @@
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<IActionResult> EditarReceta([FromBody] EditarRecetaDTO recetaEditDTO)
+        public async Task<IActionResult> EditarReceta([FromBody] EditarRecetaDTO recetaEditDTO)
         {
-            throw new NotImplementedException();
+            var result = await _recetaService.EditarReceta(recetaEditDTO);
+            if (result.IsSuccess)
+                return Ok(result);
+
+            return BadRequest(result.Error);
         }
 
         /// <summary>
@@ -93,7 +98,7 @@
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ObtenerRecetas([FromBody] PagedQuery<RecetaFiltroDTO> pagedQuery)
+        public async Task<IActionResult> ObtenerRecetas([FromBody] PagedQuery<RecetaFiltroParametrosDTO> pagedQuery)
         {
             var result = await _recetaService.ObtenerRecetasAsync(pagedQuery);
             return Ok(result);
@@ -109,11 +114,11 @@
         /// <response code="404">Si no se encontro la receta</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpGet]
-        [Route("{id}")]
+        [Route("{recetaId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> ObtenerReceta([FromQuery] int recetaId)
+        public async Task<ActionResult> ObtenerReceta(int recetaId)
         {
             var receta = await _recetaService.ObtenerRecetaInfoAsync(recetaId);
             return Ok(receta);
@@ -129,13 +134,17 @@
         /// <response code="400">Si no pudo agregarse o eliminarse la receta a favoritos </response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPut]
-        [Route("favorito/{id}")]
+        [Route("favorito/{userId}/{recetaId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<IActionResult> ManejarFavorito([FromQuery] int recetaId)
+        public async Task<IActionResult> ManejarFavorito(int userId, int recetaId)
         {
-            throw new NotImplementedException();
+            var result = await _recetaService.ManejarFavorito(userId, recetaId);
+            if (result.IsSuccess)
+                return Ok();
+
+            return BadRequest(result.Error);
         }
 
         /// <summary>
@@ -146,16 +155,39 @@
         ///     Filtros de la receta
         /// </returns>
         /// <response code="200">Si se pudieron obtener los filtros correctamente</response>
-        /// <response code="404">Si no se encontraron los filtros </response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpGet]
         [Route("filtros")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ObtenerFiltros()
+        {
+            var filters = await _recetaService.ObtenerFiltros();
+            return Ok(filters);
+        }
+
+        /// <summary>
+        ///  Obtiene los filtros disponibles para realizar la busqueda
+        ///  de una receta.
+        /// </summary>
+        /// <returns>
+        ///     Filtros de la receta
+        /// </returns>
+        /// <response code="200">Si la receta fue validada correctamente</response>
+        /// <response code="400">Si la receta no fue validada correctamente </response>
+        /// <response code="500">En el caso de haber un problema interno en el codigo</response>
+        [HttpGet]
+        [Route("validar/{recetaId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public Task<IActionResult> ObtenerFiltros()
+        public async Task<IActionResult> ValidarReceta(int recetaId)
         {
-            throw new NotImplementedException();
+            var recetaValidacion = await _recetaService.ValidarReceta(recetaId);
+            if (recetaValidacion.IsSuccess)
+                return Ok();
+
+            return BadRequest(recetaValidacion.Error);
         }
     }
 }
