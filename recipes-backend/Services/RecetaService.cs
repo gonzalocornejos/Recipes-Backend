@@ -1,15 +1,16 @@
 ﻿namespace recipes_backend.Services
 {
     using AutoMapper;
-    using CSharpFunctionalExtensions;
     using recipes_backend.Data;
     using recipes_backend.Dtos.Categoria;
     using recipes_backend.Dtos.Ingrediente;
     using recipes_backend.Dtos.Receta;
     using recipes_backend.Dtos.Receta.Query;
+    using recipes_backend.Exceptions;
     using recipes_backend.Helpers.Query;
     using recipes_backend.Repositories.Interfaces;
     using recipes_backend.Services.Interfaces;
+    using System.Net;
     using System.Threading.Tasks;
 
     public class RecetaService : IRecetaService
@@ -48,99 +49,71 @@
             return _mapper.Map<RecetaInfoDTO>(receta);
         }
 
-        public async Task<Result> CrearReceta(int userId, CrearRecetaDTO recetaDTO)
+        public async Task CrearReceta(int userId, CrearRecetaDTO recetaDTO)
         {
-            try
-            {
-                var usuario = await _usuarioRepository.BuscarUsuario(userId);
-                if (usuario == null)
-                    throw new Exception("Usuario Invalido");
+            var usuario = await _usuarioRepository.BuscarUsuario(userId);
+            if (usuario == null)
+                throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
-                var tipoPlato = await _tipoPlatoRepository.BuscarTipoPlato(recetaDTO.TipoPlatoId);
-                if (tipoPlato == null)
-                    throw new Exception("Tipo de plato invalido");
+            var tipoPlato = await _tipoPlatoRepository.BuscarTipoPlato(recetaDTO.TipoPlatoId);
+            if (tipoPlato == null)
+                throw new AppException("Tipo de plato invalido", HttpStatusCode.NotFound);
 
-                usuario.CrearReceta(recetaDTO.Nombre, recetaDTO.Descripcion, recetaDTO.Foto, 
-                    recetaDTO.Porciones, recetaDTO.CantidadPersonas, tipoPlato);
-                await _dbContext.SaveChangesAsync();
-
-                return Result.Success();
-            }
-            catch(Exception ex)
-            {
-                return Result.Failure(ex.Message);
-            }
+            usuario.CrearReceta(recetaDTO.Nombre, recetaDTO.Descripcion, recetaDTO.Foto, 
+                recetaDTO.Porciones, recetaDTO.CantidadPersonas, tipoPlato);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Result> EditarReceta(EditarRecetaDTO recetaEditDTO)
+        public async Task<RecetaInfoDTO> EditarReceta(int usuarioId, int recetaId, EditarRecetaDTO recetaEditDTO)
         {
-            try
-            {
-                var usuario = await _usuarioRepository.BuscarUsuario(recetaEditDTO.UsuarioId);
-                if (usuario == null)
-                    throw new Exception("Usuario Invalido");
+            var usuario = await _usuarioRepository.BuscarUsuario(usuarioId);
+            if (usuario == null)
+                throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
-                var receta = await _recetaRepository.BuscarReceta(recetaEditDTO.RecetaEditada.Id);
-                if (receta == null)
-                    throw new Exception("Receta Invalida");
+            var receta = await _recetaRepository.BuscarReceta(recetaId);
+            if (receta == null)
+                throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
 
-                //...
-                // Logica de editar receta
-                // ...
+            if (receta.Usuario != usuario)
+                throw new AppException("No autorizado a eliminar la receta", HttpStatusCode.Forbidden);
 
-                await _dbContext.SaveChangesAsync();
-                return Result.Success(_mapper.Map<RecetaInfoDTO>(receta));
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure(ex.Message);
-            }
+            //...
+            // Logica de editar receta
+            // ...
+
+            await _dbContext.SaveChangesAsync();
+            return _mapper.Map<RecetaInfoDTO>(receta);
         }
 
-        public async Task<Result> EliminarReceta(int userId, int recetaId)
+        public async Task EliminarReceta(int userId, int recetaId)
         {
-            try
-            {
-                var usuario = await _usuarioRepository.BuscarUsuario(userId);
-                if (usuario == null)
-                    throw new Exception("Usuario Invalido");
+            var usuario = await _usuarioRepository.BuscarUsuario(userId);
+            if (usuario == null)
+                throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
-                var receta = await _recetaRepository.BuscarReceta(recetaId);
-                if (receta == null)
-                    throw new Exception("Receta Invalida");
+            var receta = await _recetaRepository.BuscarReceta(recetaId);
+            if (receta == null)
+                throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
 
-                usuario.EliminarReceta(receta);
-                await _dbContext.SaveChangesAsync();
+            if (receta.Usuario != usuario)
+                throw new AppException("No autorizado a eliminar la receta", HttpStatusCode.Forbidden);
 
-                return Result.Success();
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure(ex.Message);
-            }
+            usuario.EliminarReceta(receta);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Result> ManejarFavorito(int userId, int recetaId)
+        public async Task ManejarFavorito(int userId, int recetaId)
         {
-            try
-            {
-                var usuario = await _usuarioRepository.BuscarUsuario(userId);
-                if (usuario == null)
-                    throw new Exception("Usuario Invalido");
+            var usuario = await _usuarioRepository.BuscarUsuario(userId);
+            if (usuario == null)
+                throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
-                var receta = await _recetaRepository.BuscarReceta(recetaId);
-                if (receta == null)
-                    throw new Exception("Receta Invalida");
+            var receta = await _recetaRepository.BuscarReceta(recetaId);
+            if (receta == null)
+                throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
 
-                usuario.ToggleFavorito(receta);
-                await _dbContext.SaveChangesAsync();
-
-                return Result.Success();
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure(ex.Message);
-            }
+            usuario.ToggleFavorito(receta);
+            await _dbContext.SaveChangesAsync();         
         }
 
         public async Task<RecetaFiltroDTO> ObtenerFiltros()
@@ -154,24 +127,17 @@
             };
         }
 
-        public async Task<Result> ValidarReceta(int recetaId)
+        public async Task<bool> ValidarReceta(int recetaId)
         {
-            try
-            {
-                var receta = await _recetaRepository.BuscarReceta(recetaId);
-                if (receta == null)
-                    throw new Exception("Receta Invalida");
+            var receta = await _recetaRepository.BuscarReceta(recetaId);
+            if (receta == null)
+                throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
 
-                // ...
-                // Logica de validacion
-                // ...
+            // ...
+            // Logica de validacion
+            // ...
 
-                return Result.Success();
-            }
-            catch(Exception ex)
-            {
-                return Result.Failure(ex.Message);
-            }
+            return true;          
         }
     }
 }

@@ -5,6 +5,8 @@
     using recipes_backend.Dtos.Receta.Query;
     using recipes_backend.Helpers.Query;
     using recipes_backend.Services.Interfaces;
+    using System.ComponentModel.DataAnnotations;
+    using System.Net;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -22,76 +24,93 @@
         /// </summary>
         /// <returns>
         ///     El estado de finalizacion del proceso.
-        /// </returns>
+        /// </returns>       
+        /// <param name="userId">Id del usuario que creará de la receta</param>
+        /// <param name="recetaDTO">Informacion de la receta a crear</param>
         /// <response code="201">Si la receta pudo ser creada correctamente</response>
-        /// <response code="400">Si no pudo crearse la receta por algun parametro</response>
+        /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+        /// <response code="404">Si alguna entity no fue encontrada</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPost]
+        [Route("{userId}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CrearReceta([FromQuery] int userId,  [FromBody] CrearRecetaDTO recetaDTO)
+        public async Task<IActionResult> CrearReceta([FromRoute, Required] int userId, [FromBody] CrearRecetaDTO recetaDTO)
         {
-            var result = await _recetaService.CrearReceta(userId, recetaDTO);
-            if (result.IsSuccess)
-                return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
 
-            return BadRequest(result.Error);
+            await _recetaService.CrearReceta(userId, recetaDTO);
+            return StatusCode((int)HttpStatusCode.Created);
         }
 
         /// <summary>
-        ///     Elimina la receta cuyo id es pasado por parametro.
+        ///     Elimina la receta.
         /// </summary>
         /// <returns>
         ///     El estado de finalizacion del proceso.
         /// </returns>
-        /// <response code="200">Si la receta pudo ser eliminada correctamente</response>
-        /// <response code="400">Si no pudo eliminarse la receta por algun parametro</response>
+        /// <param name="usuarioId">Id del usuario que eliminará la receta</param>
+        /// <param name="recetaId">Id de la receta a eliminar</param>
+        /// <response code="204">Si la receta pudo ser eliminada correctamente</response>        
+        /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+        /// <response code="403">Si no pudo eliminarse la receta por alguna autorizacion</response>
+        /// <response code="404">Si alguna entity no fue encontrada</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpDelete]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Route("{usuarioId}/{recetaId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> EliminarReceta([FromQuery] int userId, [FromQuery] int recetaId)
+        public async Task<IActionResult> EliminarReceta([FromRoute, Required] int usuarioId, [FromRoute, Required] int recetaId)
         {
-            var result = await _recetaService.EliminarReceta(userId, recetaId);
-            if (result.IsSuccess)
-                return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
 
-            return BadRequest(result.Error);
+            await _recetaService.EliminarReceta(usuarioId, recetaId);
+            return NoContent();
         }
 
         /// <summary>
-        ///     Edita la receta con los parametros recibidos
+        ///     Edita la receta.
         /// </summary>
         /// <returns>
-        ///     El estado de finalizacion del proceso
+        ///     El modelo de la receta editada.
         /// </returns>
-        ///  <response code="200">Si la receta pudo ser editada correctamente</response>
-        /// <response code="400">Si no pudo editarse la receta por algun parametro</response>
+        /// <param name="usuarioId">Id del usuario propietario de la receta</param>
+        /// <param name="recetaId">Id de la receta a editar</param>
+        /// <param name="recetaEditDTO">Datos a cambiar de la receta</param>
+        /// <response code="200">Si la receta pudo ser editada correctamente</response>
+        /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+        /// <response code="404">Si alguna entity no fue encontrada</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPatch]
+        [Route("{usuarioId}/{idReceta}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> EditarReceta([FromBody] EditarRecetaDTO recetaEditDTO)
+        public async Task<IActionResult> EditarReceta([FromRoute, Required] int usuarioId, [FromRoute, Required] int recetaId, [FromBody] EditarRecetaDTO recetaEditDTO)
         {
-            var result = await _recetaService.EditarReceta(recetaEditDTO);
-            if (result.IsSuccess)
-                return Ok(result);
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
 
-            return BadRequest(result.Error);
+            var recetaEditada = await _recetaService.EditarReceta(usuarioId, recetaId, recetaEditDTO);
+            return Ok(recetaEditada);
         }
 
         /// <summary>
-        ///     Obtiene las recetas teniendo en cuenta los filtros
-        ///     pasados por parametro.
+        ///     Obtiene las recetas.
         /// </summary>
         /// <returns>
         ///     Listado de recetas.
         /// </returns>
         /// <response code="200">Si las recetas pudieron ser buscadas correctamente</response>
-        /// <response code="400">Si no pudo buscarse las recetas por algun parametro</response>
+        /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPost]
         [Route("buscar")]
@@ -105,21 +124,26 @@
         }
 
         /// <summary>
-        ///     Obtiene una receta cuyo id es pasado por parametro.
+        ///     Obtiene una receta.
         /// </summary>
         /// <returns>
-        ///     La infromacion de una receta.
+        ///     La infromacion de la receta pedida.
         /// </returns>
-        /// <response code="200">Si la receta pudo ser buscadas correctamente</response>
+        /// <response code="200">Si la receta pudo ser buscada correctamente</response>
+        /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="404">Si no se encontro la receta</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpGet]
         [Route("{recetaId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> ObtenerReceta(int recetaId)
+        public async Task<ActionResult> ObtenerReceta([FromRoute, Required] int recetaId)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
+
             var receta = await _recetaService.ObtenerRecetaInfoAsync(recetaId);
             return Ok(receta);
         }
@@ -130,29 +154,30 @@
         /// <returns>
         ///     El estado de finalizacion del proceso.
         /// </returns>
-        /// <response code="200">Si la receta pudo ser agregada o eliminada de favoritos correctamente</response>
-        /// <response code="400">Si no pudo agregarse o eliminarse la receta a favoritos </response>
+        /// <response code="204">Si la receta pudo ser agregada o eliminada de favoritos correctamente</response>
+        /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+        /// <response code="404">Si no se encontro alguna entity</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPut]
         [Route("favorito/{userId}/{recetaId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ManejarFavorito(int userId, int recetaId)
+        public async Task<IActionResult> ManejarFavorito([FromRoute, Required] int userId, [FromRoute, Required] int recetaId)
         {
-            var result = await _recetaService.ManejarFavorito(userId, recetaId);
-            if (result.IsSuccess)
-                return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
 
-            return BadRequest(result.Error);
+            await _recetaService.ManejarFavorito(userId, recetaId);
+            return NoContent();
         }
 
         /// <summary>
-        ///  Obtiene los filtros disponibles para realizar la busqueda
-        ///  de una receta.
+        ///     Obtiene los filtros disponibles para realizar la busqueda de una receta.
         /// </summary>
         /// <returns>
-        ///     Filtros de la receta
+        ///     Filtros para buscar una receta.
         /// </returns>
         /// <response code="200">Si se pudieron obtener los filtros correctamente</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
@@ -167,27 +192,26 @@
         }
 
         /// <summary>
-        ///  Obtiene los filtros disponibles para realizar la busqueda
-        ///  de una receta.
+        ///     Valida si una receta es apta para publicar.
         /// </summary>
         /// <returns>
-        ///     Filtros de la receta
+        ///     Estado de la validacion de la receta.
         /// </returns>
-        /// <response code="200">Si la receta fue validada correctamente</response>
-        /// <response code="400">Si la receta no fue validada correctamente </response>
+        /// <response code="204">Si la receta fue validada correctamente</response>
+        /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpGet]
         [Route("validar/{recetaId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ValidarReceta(int recetaId)
+        public async Task<IActionResult> ValidarReceta([FromRoute, Required] int recetaId)
         {
-            var recetaValidacion = await _recetaService.ValidarReceta(recetaId);
-            if (recetaValidacion.IsSuccess)
-                return Ok();
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
 
-            return BadRequest(recetaValidacion.Error);
+            await _recetaService.ValidarReceta(recetaId);           
+            return NoContent();
         }
     }
 }

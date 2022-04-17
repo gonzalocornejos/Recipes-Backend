@@ -2,5 +2,6 @@
 {
     public interface IUsuarioService
     {
+        Task RecuperarContraseña(int usuarioId);
     }
 }

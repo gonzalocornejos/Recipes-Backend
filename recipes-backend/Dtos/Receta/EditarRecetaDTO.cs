@@ -1,8 +1,10 @@
 ﻿namespace recipes_backend.Dtos.Receta
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class EditarRecetaDTO
     {
-        public int UsuarioId { get; set; }
-        public RecetaDTO RecetaEditada { get; set; }
+        [Required]
+        public string Nombre { get; set; }
     }
 }

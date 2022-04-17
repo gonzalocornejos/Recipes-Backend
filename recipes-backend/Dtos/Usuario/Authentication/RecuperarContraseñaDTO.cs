@@ -1,8 +1,10 @@
 ﻿namespace recipes_backend.Dtos.Usuario.Authentication
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class RecuperarContraseñaDTO
     {
-        public int UsuarioId { get; set; }
+        [Required]
         public int CodigoValidacion { get; set; }
     }
 }

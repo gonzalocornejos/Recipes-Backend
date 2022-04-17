@@ -35,9 +35,9 @@
         /// <returns>
         ///     Resultado Success o Fail del proceso
         /// </returns>
-        Task<Result> CrearReceta(int userId, CrearRecetaDTO recetaDTO);
+        Task CrearReceta(int userId, CrearRecetaDTO recetaDTO);
 
-        Task<Result> EditarReceta(EditarRecetaDTO recetaEditDTO);
+        Task<RecetaInfoDTO> EditarReceta(int usuarioId, int recetaId, EditarRecetaDTO recetaEditDTO);
 
         /// <summary>
         ///     Busca al usuario para luego darle la responsabilidad 
@@ -48,12 +48,12 @@
         /// <returns>
         ///     Resultado Success o Fail del proceso
         /// </returns>
-        Task<Result> EliminarReceta(int userId, int recetaId);
+        Task EliminarReceta(int userId, int recetaId);
 
-        Task<Result> ManejarFavorito(int userId, int recetaId);
+        Task ManejarFavorito(int userId, int recetaId);
 
         Task<RecetaFiltroDTO> ObtenerFiltros();
 
-        Task<Result> ValidarReceta(int recetaId);
+        Task<bool> ValidarReceta(int recetaId);
     }
 }

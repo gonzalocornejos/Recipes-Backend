@@ -4,6 +4,8 @@ using Microsoft.OpenApi.Models;
 using recipes_backend.Data;
 using recipes_backend.Helpers;
 using recipes_backend.Helpers.Middleware;
+using recipes_backend.Integrations.Mailing;
+using recipes_backend.Integrations.Mailing.Interfaces;
 using recipes_backend.Repositories;
 using recipes_backend.Repositories.Interfaces;
 using recipes_backend.Services;
@@ -38,12 +40,16 @@ services.AddSwaggerGen(c =>
 // Services
 services.AddScoped<IRecetaService, RecetaService>();
 services.AddScoped<IUsuarioService, UsuarioService>();
+services.AddScoped<IMailingService, MailingService>();
 
 // Repositories
 services.AddScoped<IRecetaRepository, RecetaRepository>();
 services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 services.AddScoped<ITipoPlatoRepository, TipoPlatoRepository>();
 services.AddScoped<IIngredienteRepository, IngredienteRepository>();
+
+// Integrations
+services.AddScoped<IMailing, MailjetMailing>();
 
 // AutoMapper
 var mappingConfig = new MapperConfiguration(mc =>
