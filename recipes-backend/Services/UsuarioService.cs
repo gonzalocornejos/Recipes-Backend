@@ -9,17 +9,17 @@
 
     public class UsuarioService : IUsuarioService
     {
+        private readonly IGenericRepository _genericRepository;
+
         private readonly IUsuarioRepository _usuarioRepository;
 
         private readonly IMailingService _mailingService;
 
-        private readonly DataContext _dbContext;
-
-        public UsuarioService(IUsuarioRepository usuarioRepository, IMailingService mailingService, DataContext dbContext)
+        public UsuarioService(IUsuarioRepository usuarioRepository, IMailingService mailingService, IGenericRepository genericRepository)
         {
             _usuarioRepository = usuarioRepository;
             _mailingService = mailingService;
-            _dbContext = dbContext;
+            _genericRepository = genericRepository;
         }
 
         public async Task RecuperarContraseña(int usuarioId)
@@ -34,7 +34,7 @@
             int nuevoCodigoValidacion = new Random().Next(100000,999999);
             // Setear el nuevo codigo de validacion en la nueva tabla/campo.
 
-            await _dbContext.SaveChangesAsync();
+            await _genericRepository.GuardarCambiosAsync();
 
             await _mailingService.EnviarCodigoValidacion(usuario.Mail, nuevoCodigoValidacion);
         }

@@ -23,6 +23,7 @@
         /// <returns>
         ///     Autorizacion del usuario.
         /// </returns>
+        /// <param name="credenciales">Credenciales para el logueo</param>
         /// <response code="204">Si las credenciales son validas</response>
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="401">Si las credenciales son invalidas para autenticar</response>
@@ -46,6 +47,7 @@
         /// <returns>
         ///     Estado de finalizacion del proceso de registro.
         /// </returns>
+        /// <param name="registroData">Credenciales para registrarse</param>
         /// <response code="204">Si las credenciales son validas para registrar</response>
         /// <response code="400">Si las credenciales son invalidas para registrar</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
@@ -68,6 +70,7 @@
         /// <returns>
         ///     Validacion correcta o denegada.
         /// </returns>
+        /// <param name="primerPasoRegistroData">Credenciales para el primer paso del registro</param>
         /// <response code="204">Si las credenciales son validas para seguir en el proceso de registro</response>
         /// <response code="400">Si las credenciales son invalidas para seguir en el proceso de registro</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
@@ -90,6 +93,7 @@
         /// <returns>
         ///     Estado del proceso de finalizacion del envio de email.
         /// </returns>
+        /// <param name="usuarioId">Id del usuario que quiere recuperar la contraseña</param>
         /// <response code="200">Si se ha enviado correctamente el codigo de validacion de cambio de contraseña</response>
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="404">Si no se encontro el usuario</response>
@@ -115,6 +119,8 @@
         /// <returns>
         ///     Validacion correcta o incorrecta.
         /// </returns>
+        /// <param name="usuarioId">Id del usuario</param>
+        /// <param name="recuperacionData">Codigo de validacion</param>
         /// <response code="200">Si el codigo de validacion es correcto</response>
         /// <response code="400">Si el codigo de validacion es incorrecto</response>
         /// <response code="404">Si no se encontro el usuario</response>
@@ -139,6 +145,8 @@
         /// <returns>
         ///     Estado del proceso de finalizacion del cambio de contraseña.
         /// </returns>
+        /// <param name="usuarioId">Id del usuario</param>
+        /// <param name="cambiarContraseñaData">Nueva contraseña</param>
         /// <response code="200">Si la contraseña ha podido modificarse correctamente</response>
         /// <response code="400">Si la contraseña no ha podido modificarse correctamente</response>
         /// <response code="404">Si no se encontro el usuario</response>

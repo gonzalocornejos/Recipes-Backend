@@ -20,22 +20,22 @@
         private readonly ITipoPlatoRepository _tipoPlatoRepository;
         private readonly IIngredienteRepository _ingredienteRepository;
 
+        private readonly IGenericRepository _genericRepository;
         private readonly IMapper _mapper;
-        private readonly DataContext _dbContext;
 
         public RecetaService(IRecetaRepository recetaRepository, 
             IUsuarioRepository usuarioRepository, 
             ITipoPlatoRepository tipoPlatoRepository, 
             IIngredienteRepository ingredienteRepository,
             IMapper mapper,
-            DataContext dbContext)
+            IGenericRepository genericRepository)
         {
             _recetaRepository = recetaRepository;
             _usuarioRepository = usuarioRepository;
             _tipoPlatoRepository = tipoPlatoRepository;
             _ingredienteRepository = ingredienteRepository;
             _mapper = mapper;
-            _dbContext = dbContext;
+            _genericRepository = genericRepository;
         }
 
         public async Task<PagedQueryResult<RecetaResultadoDTO>> ObtenerRecetasAsync(PagedQuery<RecetaFiltroParametrosDTO> pagedQuery)
@@ -61,7 +61,7 @@
 
             usuario.CrearReceta(recetaDTO.Nombre, recetaDTO.Descripcion, recetaDTO.Foto, 
                 recetaDTO.Porciones, recetaDTO.CantidadPersonas, tipoPlato);
-            await _dbContext.SaveChangesAsync();
+            await _genericRepository.GuardarCambiosAsync();
         }
 
         public async Task<RecetaInfoDTO> EditarReceta(int usuarioId, int recetaId, EditarRecetaDTO recetaEditDTO)
@@ -81,7 +81,7 @@
             // Logica de editar receta
             // ...
 
-            await _dbContext.SaveChangesAsync();
+            await _genericRepository.GuardarCambiosAsync();
             return _mapper.Map<RecetaInfoDTO>(receta);
         }
 
@@ -99,7 +99,7 @@
                 throw new AppException("No autorizado a eliminar la receta", HttpStatusCode.Forbidden);
 
             usuario.EliminarReceta(receta);
-            await _dbContext.SaveChangesAsync();
+            await _genericRepository.GuardarCambiosAsync();
         }
 
         public async Task ManejarFavorito(int userId, int recetaId)
@@ -113,7 +113,7 @@
                 throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
 
             usuario.ToggleFavorito(receta);
-            await _dbContext.SaveChangesAsync();         
+            await _genericRepository.GuardarCambiosAsync();
         }
 
         public async Task<RecetaFiltroDTO> ObtenerFiltros()

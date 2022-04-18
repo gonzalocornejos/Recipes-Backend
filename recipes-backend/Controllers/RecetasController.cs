@@ -49,9 +49,6 @@
         /// <summary>
         ///     Elimina la receta.
         /// </summary>
-        /// <returns>
-        ///     El estado de finalizacion del proceso.
-        /// </returns>
         /// <param name="usuarioId">Id del usuario que eliminará la receta</param>
         /// <param name="recetaId">Id de la receta a eliminar</param>
         /// <response code="204">Si la receta pudo ser eliminada correctamente</response>        
@@ -109,6 +106,7 @@
         /// <returns>
         ///     Listado de recetas.
         /// </returns>
+        /// <param name="pagedQuery">Paginado y filtro de la consulta</param>
         /// <response code="200">Si las recetas pudieron ser buscadas correctamente</response>
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
@@ -129,6 +127,7 @@
         /// <returns>
         ///     La infromacion de la receta pedida.
         /// </returns>
+        /// <param name="recetaId">Id de la receta a buscar</param>
         /// <response code="200">Si la receta pudo ser buscada correctamente</response>
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="404">Si no se encontro la receta</response>
@@ -151,9 +150,8 @@
         /// <summary>
         ///     Agrega o elimina de favoritos una receta determinada.
         /// </summary>
-        /// <returns>
-        ///     El estado de finalizacion del proceso.
-        /// </returns>
+        /// <param name="userId">Id del usuario logueado</param>
+        /// <param name="recetaId">Id de la receta a togglear el favorito</param>
         /// <response code="204">Si la receta pudo ser agregada o eliminada de favoritos correctamente</response>
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="404">Si no se encontro alguna entity</response>
@@ -194,15 +192,15 @@
         /// <summary>
         ///     Valida si una receta es apta para publicar.
         /// </summary>
-        /// <returns>
-        ///     Estado de la validacion de la receta.
-        /// </returns>
+        /// <param name="recetaId">Id de la receta a validar</param>
         /// <response code="204">Si la receta fue validada correctamente</response>
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+        /// <response code="404">Si no se encontro alguna entity</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpGet]
         [Route("validar/{recetaId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ValidarReceta([FromRoute, Required] int recetaId)
@@ -212,6 +210,29 @@
 
             await _recetaService.ValidarReceta(recetaId);           
             return NoContent();
+        }
+
+        /// <summary>
+        ///     Agrega una puntacion a la receta.
+        /// </summary>
+        /// <param name="recetaId">Id de la receta a puntuar</param>
+        /// <param name="puntaje">Puntaje</param>
+        /// <response code="204">Si la receta fue puntuada correctamente</response>
+        /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+        /// <response code="404">Si no se encontro alguna entity</response>
+        /// <response code="500">En el caso de haber un problema interno en el codigo</response>
+        [HttpPost]
+        [Route("puntuar/{recetaId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Puntuar([FromRoute, Required] int recetaId, [FromQuery, Required] int puntaje)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
+
+            return StatusCode((int)HttpStatusCode.NotImplemented);
         }
     }
 }
