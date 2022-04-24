@@ -3,11 +3,27 @@
     using recipes_backend.Models.ORM;
     public class Foto : Entity
     {
-        public Receta Receta { get; private set; }
+        private Receta _receta;
+        private string _urlFoto;
+        private string _extension;
 
-        public string UrlFoto { get; private set; }
+        public Receta Receta
+        {
+            get { return _receta; }
+            set { _receta = value; }
+        }
 
-        public string Extension { get; private set; }
+        public string UrlFoto
+        {
+            get { return _urlFoto; }
+            set { _urlFoto = value; }
+        }
+
+        public string Extension
+        {
+            get { return _extension; }
+            set { _extension = value; }
+        }
 
         protected Foto()
         {

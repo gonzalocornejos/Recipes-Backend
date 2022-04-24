@@ -6,29 +6,59 @@
 
     public class Usuario : Entity
     {
-        public string Mail { get; private set; }
+        private string _mail;
+        private string _nickName;
+        private bool _habilitado;
+        private string _nombre;
+        private string _avatar;
+        private TipoUsuario _tipoUsuario;
+        private readonly List<Receta> _recetas;
+        private readonly List<Favorita> _favoritas;
 
-        public string NickName { get; private set; }
+        public string Mail
+        {
+            get { return _mail; }
+            set { _mail = value; }
+        }
 
-        public bool Habilitado { get; private set; }
+        public string NickName
+        {
+            get { return _nickName; }
+            set { _nickName = value; }
+        }
 
-        public string Nombre { get; private set; }
+        public bool Habilitado
+        {
+            get { return _habilitado; }
+            set { _habilitado = value; }
+        }
 
-        public string Avatar { get; private set; }
+        public string Nombre
+        {
+            get { return _nombre; }
+            set { _nombre = value; }
+        }
 
-        public TipoUsuario TipoUsuario { get; private set; }
+        public string Avatar
+        {
+            get { return _avatar; }
+            set { _avatar = value; }
+        }
 
+        public TipoUsuario TipoUsuario
+        {
+            get { return _tipoUsuario; }
+            set { _tipoUsuario = value; }
+        }
 
-        private readonly List<Receta> _recetas = new List<Receta>();
         public IReadOnlyList<Receta> Recetas => _recetas.ToList();
 
-
-        private readonly List<Favorita> _favoritas = new List<Favorita>();
         public IReadOnlyList<Favorita> Favoritas => _favoritas.ToList();
 
         protected Usuario()
         {
-
+            _recetas = new List<Receta>();
+            _favoritas = new List<Favorita>();
         }
 
         public Usuario(string mail, string nickName, bool habilitado, string nombre, string avatar, TipoUsuario tipoUsuario)

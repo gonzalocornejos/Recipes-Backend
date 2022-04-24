@@ -3,18 +3,34 @@
     using recipes_backend.Models.ORM;
     public class Paso : Entity
     {
-        public Receta Receta { get; private set; }
+        private Receta _receta;
+        private int _nroPaso;
+        private string _texto;
+        private readonly List<Multimedia> _multimedias;
 
-        public int NroPaso { get; private set; }
+        public Receta Receta
+        {
+            get { return _receta; }
+            set { _receta = value; }
+        }
 
-        public string Texto { get; private set; }
+        public int NroPaso
+        {
+            get { return _nroPaso; }
+            set { _nroPaso = value; }
+        }
 
-        private readonly List<Multimedia> _multimedias = new List<Multimedia>();
+        public string Texto
+        {
+            get { return _texto; }
+            set { _texto = value; }
+        }
+
         public IReadOnlyList<Multimedia> Multimedias => _multimedias.ToList();
 
         protected Paso()
         {
-
+            _multimedias = new List<Multimedia>();
         }
 
         public Paso(Receta receta, int nroPaso, string texto)

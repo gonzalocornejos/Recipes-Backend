@@ -43,6 +43,7 @@ services.AddScoped<IUsuarioService, UsuarioService>();
 services.AddScoped<IMailingService, MailingService>();
 
 // Repositories
+services.AddScoped<IGenericRepository, GenericRepository>();
 services.AddScoped<IRecetaRepository, RecetaRepository>();
 services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 services.AddScoped<ITipoPlatoRepository, TipoPlatoRepository>();

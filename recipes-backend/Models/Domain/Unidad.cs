@@ -3,7 +3,13 @@
     using recipes_backend.Models.ORM;
     public class Unidad : Entity
     {
-        public string Descripcion { get; private set; }
+        private string _descripcion;
+
+        public string Descripcion
+        {
+            get { return _descripcion; }
+            set { _descripcion = value; }
+        }
 
         protected Unidad()
         {

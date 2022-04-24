@@ -5,13 +5,34 @@
 
     public class Multimedia : Entity
     {
-        public Paso Paso { get; private set; }
+        private Paso _paso;
+        private TipoContenido _tipoContenido;
+        private string _extension;
+        private string _urlContenido;
 
-        public TipoContenido TipoContenido { get; private set; }
+        public Paso Paso
+        {
+            get { return _paso; }
+            set { _paso = value; }
+        }
 
-        public string Extension { get; private set; }
+        public TipoContenido TipoContenido
+        {
+            get { return _tipoContenido; }
+            set { _tipoContenido = value; }
+        }
 
-        public string UrlContenido { get; private set; }
+        public string Extension
+        {
+            get { return _extension; }
+            set { _extension = value; }
+        }
+
+        public string UrlContenido
+        {
+            get { return _urlContenido; }
+            set { _urlContenido = value; }
+        }
 
         protected Multimedia()
         {
