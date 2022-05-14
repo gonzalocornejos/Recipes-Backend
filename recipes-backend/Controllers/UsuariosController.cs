@@ -121,7 +121,7 @@
         /// </returns>
         /// <param name="usuarioId">Id del usuario</param>
         /// <param name="recuperacionData">Codigo de validacion</param>
-        /// <response code="200">Si el codigo de validacion es correcto</response>
+        /// <response code="204">Si el codigo de validacion es correcto</response>
         /// <response code="400">Si el codigo de validacion es incorrecto</response>
         /// <response code="404">Si no se encontro el usuario</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
@@ -147,8 +147,8 @@
         /// </returns>
         /// <param name="usuarioId">Id del usuario</param>
         /// <param name="cambiarContraseñaData">Nueva contraseña</param>
-        /// <response code="200">Si la contraseña ha podido modificarse correctamente</response>
-        /// <response code="400">Si la contraseña no ha podido modificarse correctamente</response>
+        /// <response code="204">Si la contraseña ha podido modificarse correctamente</response>
+        /// <response code="400">Si la contraseña no ha podido modificarse correctamente por algun parametro</response>
         /// <response code="404">Si no se encontro el usuario</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPatch]

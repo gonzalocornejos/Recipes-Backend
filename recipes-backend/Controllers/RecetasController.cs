@@ -150,7 +150,7 @@
         /// <summary>
         ///     Agrega o elimina de favoritos una receta determinada.
         /// </summary>
-        /// <param name="userId">Id del usuario logueado</param>
+        /// <param name="userId">Id del usuario a manejar el favorito</param>
         /// <param name="recetaId">Id de la receta a togglear el favorito</param>
         /// <response code="204">Si la receta pudo ser agregada o eliminada de favoritos correctamente</response>
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
@@ -187,6 +187,29 @@
         {
             var filters = await _recetaService.ObtenerFiltros();
             return Ok(filters);
+        }
+
+        /// <summary>
+        ///     Verifica que el usuario creador de la receta no tenga una receta ya creada con ese nombre.
+        /// </summary>
+        /// <param name="usuarioId">Usuario creador de la receta</param>
+        /// <param name="nombreReceta">Nombre de la receta a verificar</param>
+        /// <response code="200">Si el usuario tiene una receta con el nombre</response>
+        /// <response code="400">Si algun parametro no fue enviado correctamente</response>
+        /// <response code="404">Si no se ha encontrado ninguna receta con ese nombre</response>
+        /// <response code="500">En el caso de haber un problema interno en el codigo</response>
+        [HttpGet]
+        [Route("{usuarioId}/existente")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> VerificarNombreRecetaExsitente([Required, FromRoute] int usuarioId, [Required, FromQuery] string nombreReceta)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
+
+            return StatusCode((int)HttpStatusCode.NotImplemented);
         }
 
         /// <summary>
