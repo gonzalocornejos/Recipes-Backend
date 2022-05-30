@@ -22,20 +22,24 @@
 
         public async Task<PagedQueryResult<RecetaResultadoDTO>> BuscarRecetas(PagedQuery<RecetaFiltroParametrosDTO> pagedQuery)
         {
-            var query = $@"WITH Recetas (Id, Nombre, Descripcion, Porciones, FotoFinal) AS (
-                                    SELECT R.Id, R.Nombre, R.Descripcion, R.Porciones, R.Foto
-	                                FROM Receta R
-		                                INNER JOIN Usuario U ON U.Id = R.UsuarioId
-		                                INNER JOIN TipoPlato TP ON TP.Id = R.TipoPlatoId
-		                                INNER JOIN Utilizados UT ON UT.RecetaId = R.Id
-		                                INNER JOIN Ingrediente I ON I.Id = UT.IngredienteId		
+            var query = $@"WITH Recetas (Id, Nombre, Descripcion, Porciones, FotoFinal, Nickname, EsFavorito) AS (
+                                    SELECT R.Id AS RecipeId, R.Nombre, R.Descripcion, R.Porciones, R.Foto, U.NickName, IIF(F.Id IS NULL, 0, 1)
+	                                FROM Receta R -- Cambiar estos LEFT por INNER despues de tener el modulo completo
+		                                LEFT JOIN Usuario U ON U.Id = R.UsuarioId
+		                                LEFT JOIN TipoPlato TP ON TP.Id = R.TipoPlatoId
+		                                LEFT JOIN Utilizados UT ON UT.RecetaId = R.Id
+		                                LEFT JOIN Ingrediente I ON I.Id = UT.IngredienteId
+		                                INNER JOIN Usuario UL ON UL.NickName = @UsuarioLogueado
+                                        LEFT JOIN Favorita F ON F.UsuarioId = UL.Id AND F.RecetaId = R.Id
 	                                WHERE 1 = 1
+                                        {(pagedQuery.Filter.SoloPropias ? "AND U.NickName IN (@UsuarioLogueado)" : "AND U.NickName NOT IN (@UsuarioLogueado)")}
 		                                {Has(pagedQuery.Filter.Nombre, "AND R.Nombre LIKE '%' + @Nombre + '%'", "")}
                                         {Has(pagedQuery.Filter.TipoPlatos, "AND TP.Descripcion IN (@TipoPlatos)", "")}
                                         {Has(pagedQuery.Filter.Ingredientes, "AND I.Nombre IN (@Ingredientes)", "")}
                                         {Has(pagedQuery.Filter.IngredientesExcluidos, "AND I.Nombre NOT IN (@IngredientesExcluidos)", "")}
-                                        {Has(pagedQuery.Filter.NickName, "AND U.NickName LIKE '%' + @Nickname + '%'", "")}
-	                                ORDER BY R.{pagedQuery.SortField} {pagedQuery.SortOrder}
+                                        {Has(pagedQuery.Filter.NickName, "AND U.NickName LIKE '%' + @Nickname + '%'", "")}    
+                                        {(pagedQuery.Filter.SoloFavoritos ? "AND F.Id IS NOT NULL" : "")}
+                                    ORDER BY {pagedQuery.SortField} {pagedQuery.SortOrder}
 	                                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
                                 ), ValoracionReceta (RecetaId, ValoracionPromedio) AS (
 	                                SELECT R.Id, SUM(C.Puntaje) * 1.0 / COUNT(1)
@@ -43,15 +47,15 @@
 		                                INNER JOIN Calificacion C ON C.RecetaId = R.Id	
 	                                GROUP BY R.Id
                                 )
-                                SELECT R.Id, R.Nombre, R.Descripcion, R.Porciones, VR.ValoracionPromedio,
-                                    FF.FotoFinalId, FF.Url, FF.Extension,                                  
+                                SELECT R.Id AS RecipeId, R.Nombre, R.Descripcion, R.Porciones, R.Nickname,
+                                    CAST(ISNULL(VR.ValoracionPromedio, 0) AS INT) AS ValoracionPromedio, R.FotoFinal, R.EsFavorito                                 
                                 FROM Recetas R
-                                    INNER JOIN ValoracionReceta VR ON VR.RecetaId = R.Id
-                                    INNER JOIN FotosFinales FF ON FF.RecetaId = R.Id
-                                ORDER BY R.{pagedQuery.SortField} {pagedQuery.SortOrder}, P.NroPaso";
+                                    LEFT JOIN ValoracionReceta VR ON VR.RecetaId = R.Id
+                                ORDER BY {pagedQuery.SortField} {pagedQuery.SortOrder}";
 
             var parameters = new
             {
+                UsuarioLogueado = pagedQuery.Filter.UsuarioLogueado,
                 Nombre = pagedQuery.Filter.Nombre,
                 TipoPlatos = pagedQuery.Filter.TipoPlatos,
                 Ingredientes = pagedQuery.Filter.Ingredientes,
@@ -61,25 +65,9 @@
                 PageSize = pagedQuery.PageSize
             };
 
-            // Diccionario para el Query Multi-Mapping (One to Many) de Dapper
-            var queryDictionary = new Dictionary<int, RecetaResultadoDTO>();
-
             var result = _dbContext.Database.GetDbConnection()
-                           .Query<RecetaResultadoDTO, FotoDTO, RecetaResultadoDTO >(query,
-                                    (resultQuery, fotoFinal) => {
-                                        RecetaResultadoDTO entry;
-                                        if (!queryDictionary.TryGetValue(resultQuery.Id, out entry))
-                                            queryDictionary.Add(entry.Id, entry = resultQuery);
-                                                                                                                        
-                                        if (fotoFinal.FotoFinalId != 0)
-                                            entry.FotosFinales.Add(fotoFinal);
-
-                                        return entry;
-                                    },
-                                    parameters,
-                                    splitOn:"FotoFinalId")
-                            .Distinct()
-                            .ToList();
+                           .Query<RecetaResultadoDTO>(query,parameters)
+                           .ToList();
 
             return new PagedQueryResult<RecetaResultadoDTO>
             {

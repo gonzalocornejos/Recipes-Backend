@@ -15,6 +15,8 @@
         private readonly List<Receta> _recetas;
         private readonly List<Favorita> _favoritas;
 
+        private string _contraseña;
+
         public string Mail
         {
             get { return _mail; }
@@ -49,6 +51,12 @@
         {
             get { return _tipoUsuario; }
             set { _tipoUsuario = value; }
+        }
+
+        public string Contraseña
+        {
+            get { return _contraseña; }
+            set { _contraseña = value; }
         }
 
         public IReadOnlyList<Receta> Recetas => _recetas.ToList();

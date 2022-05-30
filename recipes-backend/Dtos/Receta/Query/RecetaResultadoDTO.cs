@@ -4,15 +4,13 @@
 
     public class RecetaResultadoDTO
     {
-        public int Id { get; set; }
+        public int RecipeId { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public int Porciones { get; set; }
+        public string NickName { get; set; }
         public double ValoracionPromedio { get; set; }
-        public List<FotoDTO> FotosFinales { get; set; }
-       public RecetaResultadoDTO()
-       {
-            FotosFinales = new List<FotoDTO>();
-       }
+        public string FotoFinal { get; set; }
+        public bool EsFavorito { get; set; }
     }
 }

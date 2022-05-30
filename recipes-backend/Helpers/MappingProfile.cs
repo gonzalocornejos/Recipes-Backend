@@ -11,8 +11,14 @@
         public MappingProfile()
         {
             CreateMap<RecetaInfoDTO, Receta>();
-            CreateMap<CategoriaDTO, TipoPlato>();
-            CreateMap<IngredienteDTO, Ingrediente>();
+            CreateMap<CategoriaDTO, TipoPlato>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Descripcion, opt => opt.MapFrom(src => src.Item))
+                .ReverseMap();
+            CreateMap<IngredienteDTO, Ingrediente>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Item))
+                .ReverseMap(); ;
         }
     }
 }

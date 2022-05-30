@@ -50,7 +50,7 @@
         /// </returns>
         Task EliminarReceta(int userId, int recetaId);
 
-        Task ManejarFavorito(int userId, int recetaId);
+        Task ManejarFavorito(string nickName, int recetaId);
 
         Task<RecetaFiltroDTO> ObtenerFiltros();
 

@@ -157,17 +157,17 @@
         /// <response code="404">Si no se encontro alguna entity</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPut]
-        [Route("favorito/{userId}/{recetaId}")]
+        [Route("favorito/{nickName}/{recetaId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ManejarFavorito([FromRoute, Required] int userId, [FromRoute, Required] int recetaId)
+        public async Task<IActionResult> ManejarFavorito([FromRoute, Required] string nickName, [FromRoute, Required] int recetaId)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");
 
-            await _recetaService.ManejarFavorito(userId, recetaId);
+            await _recetaService.ManejarFavorito(nickName, recetaId);
             return NoContent();
         }
 

@@ -105,9 +105,9 @@
             await _genericRepository.GuardarCambiosAsync();
         }
 
-        public async Task ManejarFavorito(int userId, int recetaId)
+        public async Task ManejarFavorito(string nickName, int recetaId)
         {
-            var usuario = await _usuarioRepository.BuscarUsuario(userId);
+            var usuario = await _usuarioRepository.BuscarUsuario(nickName);
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 

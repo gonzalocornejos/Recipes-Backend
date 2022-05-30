@@ -36,6 +36,17 @@ services.AddSwaggerGen(c =>
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
+services.AddCors(options =>
+{
+    options.AddPolicy("Cors", builder =>
+    {
+        builder
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
 // Singletons for Injection Dependencies
 // Services
 services.AddScoped<IRecetaService, RecetaService>();
@@ -63,22 +74,29 @@ services.AddSingleton(mapper);
 
 
 var app = builder.Build();
-
+var environment = app.Environment;
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (environment.IsDevelopment() || environment.IsEnvironment("Local"))
 {
     app.UseSwagger();
     app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Recetas API V1"); });
 }
+else if(environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
+else
+{
+    throw new Exception("Invalid environment");
+}
 
 app.UseMiddleware<ExceptionHandler>();
 
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors("_AllowOrigin");
+app.UseCors("Cors");
 
 app.Run();

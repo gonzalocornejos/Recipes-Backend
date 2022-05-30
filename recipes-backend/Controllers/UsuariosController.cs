@@ -38,7 +38,8 @@
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");
 
-            return StatusCode((int)HttpStatusCode.NotImplemented);
+            await _usuarioService.Loguearse(credenciales);
+            return NoContent();
         }
 
         /// <summary>

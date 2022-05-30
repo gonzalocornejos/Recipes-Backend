@@ -1,6 +1,7 @@
 ﻿namespace recipes_backend.Services
 {
     using recipes_backend.Data;
+    using recipes_backend.Dtos.Usuario.Authentication;
     using recipes_backend.Exceptions;
     using recipes_backend.Repositories.Interfaces;
     using recipes_backend.Services.Interfaces;
@@ -20,6 +21,12 @@
             _usuarioRepository = usuarioRepository;
             _mailingService = mailingService;
             _genericRepository = genericRepository;
+        }
+
+        public async Task Loguearse(LoguearseDTO credenciales)
+        {
+            if (!await _usuarioRepository.VerificarCredencialesLogueo(credenciales))
+                throw new AppException("Credenciales no validas", HttpStatusCode.Unauthorized);           
         }
 
         public async Task RecuperarContraseña(int usuarioId)

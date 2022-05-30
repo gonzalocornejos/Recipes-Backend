@@ -7,5 +7,8 @@
         public List<string> Ingredientes { get; set; }
         public List<string> IngredientesExcluidos { get; set; }
         public string NickName { get; set; }
+        public string UsuarioLogueado { get; set; }
+        public bool SoloFavoritos { get; set; }
+        public bool SoloPropias { get; set; }
     }
 }
