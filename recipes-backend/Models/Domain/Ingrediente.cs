@@ -4,7 +4,13 @@ namespace recipes_backend.Models.Domain
 {
     public class Ingrediente : Entity
     {
-        public string Nombre { get; private set; }
+        private string _nombre;
+
+        public string Nombre
+        {
+            get { return _nombre; }
+            set { _nombre = value; }
+        }
 
         protected Ingrediente()
         {

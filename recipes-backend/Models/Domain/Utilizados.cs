@@ -4,15 +4,41 @@
 
     public class Utilizados : Entity
     {
-        public Receta Receta { get; private set; }
+        private Receta _receta;
+        private Ingrediente _ingrediente;
+        private int _cantidad;
+        private Unidad _unidad;
+        private string _observaciones;
 
-        public Ingrediente Ingrediente { get; private set; }
+        public Receta Receta
+        {
+            get { return _receta; }
+            set { _receta = value; }
+        }
 
-        public int Cantidad { get; private set; }
+        public Ingrediente Ingrediente
+        {
+            get { return _ingrediente; }
+            set { _ingrediente = value; }
+        }
 
-        public Unidad Unidad { get; private set; }
+        public int Cantidad
+        {
+            get { return _cantidad; }
+            set { _cantidad = value; }
+        }
 
-        public string Observaciones { get; private set; }
+        public Unidad Unidad
+        {
+            get { return _unidad; }
+            set { _unidad = value; }
+        }
+
+        public string Observaciones
+        {
+            get { return _observaciones; }
+            set { _observaciones = value; }
+        }
 
         protected Utilizados()
         {

@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
+    using recipes_backend.Exceptions;
     using System;
     using System.Net;
     using System.Threading.Tasks;
@@ -31,13 +32,17 @@
             {
                 await nextMiddleware.Invoke(context);
             }
+            catch (AppException exception)
+            {
+                await SendPayload(context, Envelope.Error(exception.Message), exception.StatusCode);
+            }
             catch (Exception exception)
             {
-                await SendPayload(context, Envelope.Error(exception.Message));
+                await SendPayload(context, Envelope.Error(exception.Message), HttpStatusCode.InternalServerError);
             }
         }
 
-        private async Task SendPayload<TPayload>(HttpContext context, TPayload payload)
+        private async Task SendPayload<TPayload>(HttpContext context, TPayload payload, HttpStatusCode statusCode)
         {
             var settings = new JsonSerializerSettings()
             {
@@ -49,7 +54,7 @@
             };
             var result = JsonConvert.SerializeObject(payload, settings);
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.StatusCode = (int)statusCode;
             await context.Response.WriteAsync(result);
         }
     }

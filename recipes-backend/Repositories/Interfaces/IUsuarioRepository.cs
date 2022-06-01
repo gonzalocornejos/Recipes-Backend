@@ -1,5 +1,6 @@
 ﻿namespace recipes_backend.Repositories.Interfaces
 {
+    using recipes_backend.Dtos.Usuario.Authentication;
     using recipes_backend.Models.Domain;
 
     public interface IUsuarioRepository
@@ -13,5 +14,8 @@
         ///     El usuario encontrado
         /// </returns>
         Task<Usuario> BuscarUsuario(int usuarioId);
+        Task<Usuario> BuscarUsuario(string nickName);
+
+        Task<bool> VerificarCredencialesLogueo(LoguearseDTO credenciales);
     }
 }

@@ -4,11 +4,27 @@
 
     public class Conversion : Entity
     {
-        public Unidad UnidadOrigen { get; private set; }
+        private Unidad _unidadOrigen;
+        private Unidad _unidadDestino;
+        private double _factorConversion;
 
-        public Unidad UnidadDestino { get; private set; }
+        public Unidad UnidadOrigen
+        {
+            get { return _unidadOrigen; }
+            set { _unidadOrigen = value; }
+        }
 
-        public double FactorConversion { get; private set; }
+        public Unidad UnidadDestino
+        {
+            get { return _unidadDestino; }
+            set { _unidadDestino = value; }
+        }
+
+        public double FactorConversion
+        {
+            get { return _factorConversion; }
+            set { _factorConversion = value; }
+        }
 
         protected Conversion()
         {

@@ -15,7 +15,7 @@
         /// <returns>
         ///     Listado de recetas.
         /// </returns>
-        Task<PagedQueryResult<RecetaResultadoDTO>> ObtenerRecetasAsync(PagedQuery<RecetaFiltroDTO> pagedQuery);
+        Task<PagedQueryResult<RecetaResultadoDTO>> ObtenerRecetasAsync(PagedQuery<RecetaFiltroParametrosDTO> pagedQuery);
 
         /// <summary>
         ///     Obtiene de manera sincronica una receta en especifico.
@@ -35,7 +35,9 @@
         /// <returns>
         ///     Resultado Success o Fail del proceso
         /// </returns>
-        Task<Result> CrearReceta(int userId, CrearRecetaDTO recetaDTO);
+        Task CrearReceta(int userId, CrearRecetaDTO recetaDTO);
+
+        Task<RecetaInfoDTO> EditarReceta(int usuarioId, int recetaId, EditarRecetaDTO recetaEditDTO);
 
         /// <summary>
         ///     Busca al usuario para luego darle la responsabilidad 
@@ -46,6 +48,12 @@
         /// <returns>
         ///     Resultado Success o Fail del proceso
         /// </returns>
-        Task<Result> EliminarReceta(int userId, int recetaId);
+        Task EliminarReceta(int userId, int recetaId);
+
+        Task ManejarFavorito(string nickName, int recetaId);
+
+        Task<RecetaFiltroDTO> ObtenerFiltros();
+
+        Task<bool> ValidarReceta(int recetaId);
     }
 }

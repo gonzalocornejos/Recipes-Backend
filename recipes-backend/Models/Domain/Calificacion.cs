@@ -4,13 +4,34 @@
 
     public class Calificacion : Entity
     {
-        public Usuario Usuario { get; private set; }
+        private Usuario _usuario;
+        private Receta _receta;
+        private int _puntaje;
+        private string _comentarios;
 
-        public Receta Receta { get; private set; }
+        public Usuario Usuario
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
 
-        public int Puntaje { get; private set; }
+        public Receta Receta
+        {
+            get { return _receta; }
+            set { _receta = value; }
+        }
 
-        public string Comentarios { get; private set; }
+        public int Puntaje
+        {
+            get { return _puntaje; }
+            set { _puntaje = value; }
+        }
+
+        public string Comentarios
+        {
+            get { return _comentarios; }
+            set { _comentarios = value; }
+        }
 
         private Calificacion()
         {

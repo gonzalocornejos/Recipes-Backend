@@ -15,6 +15,12 @@
             _dbContext = dbContext;
         }
 
+        public async Task<List<TipoPlato>> ObtenerTipoPlatos()
+        {
+            return await _dbContext.TipoPlato
+                .ToListAsync();
+        }
+
         public async Task<TipoPlato> BuscarTipoPlato(int idTipoPlato)
         {           
             return await _dbContext.TipoPlato

@@ -16,6 +16,12 @@
         {
             if (string.IsNullOrWhiteSpace(value)) return orElse;
             else return thenResult;
-        }       
+        }
+
+        public static TReturn Has<TReturn>(List<string> value, TReturn thenResult, TReturn orElse)
+        {
+            if (value.Count == 0) return orElse;
+            else return thenResult;
+        }
     }
 }

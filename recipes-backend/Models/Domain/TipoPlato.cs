@@ -4,7 +4,13 @@ namespace recipes_backend.Models.Domain
 {
     public class TipoPlato : Entity
     {
-        public string Descripcion { get; private set; }
+        private string _descripcion;
+
+        public string Descripcion
+        {
+            get { return _descripcion; }
+            set { _descripcion = value; }
+        }
 
         protected TipoPlato()
         {

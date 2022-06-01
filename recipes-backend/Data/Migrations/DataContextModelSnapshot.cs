@@ -85,7 +85,7 @@ namespace recipes_backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("RecetasId")
+                    b.Property<int>("RecetaId")
                         .HasColumnType("int");
 
                     b.Property<int>("UsuarioId")
@@ -93,7 +93,7 @@ namespace recipes_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RecetasId");
+                    b.HasIndex("RecetaId");
 
                     b.HasIndex("UsuarioId");
 
@@ -284,6 +284,10 @@ namespace recipes_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Contraseña")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("Habilitado")
                         .HasColumnType("bit");
 
@@ -382,9 +386,9 @@ namespace recipes_backend.Migrations
 
             modelBuilder.Entity("recipes_backend.Models.Domain.Favorita", b =>
                 {
-                    b.HasOne("recipes_backend.Models.Domain.Receta", "Recetas")
+                    b.HasOne("recipes_backend.Models.Domain.Receta", "Receta")
                         .WithMany("Favorito")
-                        .HasForeignKey("RecetasId")
+                        .HasForeignKey("RecetaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -394,7 +398,7 @@ namespace recipes_backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Recetas");
+                    b.Navigation("Receta");
 
                     b.Navigation("Usuario");
                 });

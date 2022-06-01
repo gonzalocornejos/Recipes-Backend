@@ -4,43 +4,78 @@
 
     public class Receta : Entity
     {
-        public Usuario Usuario { get; private set; }
+        private Usuario _usuario;
+        private string _nombre;
+        private string _descripcion;
+        private string _foto;
+        private int _porciones;
+        private int _cantidadPersonas;
+        private TipoPlato _tipoPlato;
+        private readonly List<Foto> _fotos;
+        private readonly List<Utilizados> _ingredientes;
+        private readonly List<Paso> _pasos;
+        private readonly List<Calificacion> _calificaciones;
+        private readonly List<Favorita> _favorito;
 
-        public string Nombre { get; private set; }
+        public Usuario Usuario
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
 
-        public string Descripcion { get; private set; }
+        public string Nombre
+        {
+            get { return _nombre; }
+            set { _nombre = value; }
+        }
 
-        public string Foto { get; private set; }
+        public string Descripcion
+        {
+            get { return _descripcion; }
+            set { _descripcion = value; }
+        }
 
-        public int Porciones { get; private set; }
+        public string Foto
+        {
+            get { return _foto; }
+            set { _foto = value; }
+        }
 
-        public int CantidadPersonas { get; private set; }
+        public int Porciones
+        {
+            get { return _porciones; }
+            set { _porciones = value; }
+        }
 
-        public TipoPlato TipoPlato { get; private set; }
+        public int CantidadPersonas
+        {
+            get { return _cantidadPersonas; }
+            set { _cantidadPersonas = value; }
+        }
 
+        public TipoPlato TipoPlato
+        {
+            get { return _tipoPlato; }
+            set { _tipoPlato = value; }
+        }
 
-        private readonly List<Foto> _fotos = new List<Foto>();
         public IReadOnlyList<Foto> Fotos => _fotos.ToList();
 
-
-        private readonly List<Utilizados> _ingredientes = new List<Utilizados>();
         public IReadOnlyList<Utilizados> Ingredientes => _ingredientes.ToList();
 
-
-        private readonly List<Paso> _pasos = new List<Paso>();
         public IReadOnlyList<Paso> Pasos => _pasos.ToList();
 
-
-        private readonly List<Calificacion> _calificaciones = new List<Calificacion>();
         public IReadOnlyList<Calificacion> Calificaciones => _calificaciones.ToList();
 
-
-        private readonly List<Favorita> _favorito = new List<Favorita>();
         public IReadOnlyList<Favorita> Favorito => _favorito.ToList();
 
         protected Receta()
         {
-
+            _fotos = new List<Foto>();
+            _ingredientes = new List<Utilizados>();
+            _pasos = new List<Paso>();
+            _calificaciones = new List<Calificacion>();
+            _favorito = new List<Favorita>();
         }
 
         public Receta(Usuario usuario, string nombre, string descripcion, string foto,

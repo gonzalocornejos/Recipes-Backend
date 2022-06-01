@@ -1,8 +1,10 @@
 ﻿namespace recipes_backend.Dtos.Usuario.Authentication
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class CambiarContraseñaDTO
     {
-        public int UsuarioId { get; set; }
+        [Required]
         public string NuevaContraseña { get; set; }
     }
 }
