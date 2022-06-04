@@ -6,6 +6,7 @@
     using recipes_backend.Dtos.Ingrediente;
     using recipes_backend.Dtos.Receta;
     using recipes_backend.Dtos.Receta.Query;
+    using recipes_backend.Dtos.Unidad;
     using recipes_backend.Exceptions;
     using recipes_backend.Helpers.Query;
     using recipes_backend.Repositories.Interfaces;
@@ -19,6 +20,7 @@
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly ITipoPlatoRepository _tipoPlatoRepository;
         private readonly IIngredienteRepository _ingredienteRepository;
+        private readonly IUnidadRepository _unidadRepository;
 
         private readonly IGenericRepository _genericRepository;
         private readonly IMapper _mapper;
@@ -28,7 +30,8 @@
             ITipoPlatoRepository tipoPlatoRepository, 
             IIngredienteRepository ingredienteRepository,
             IMapper mapper,
-            IGenericRepository genericRepository)
+            IGenericRepository genericRepository,
+            IUnidadRepository unidadRepository)
         {
             _recetaRepository = recetaRepository;
             _usuarioRepository = usuarioRepository;
@@ -36,6 +39,7 @@
             _ingredienteRepository = ingredienteRepository;
             _mapper = mapper;
             _genericRepository = genericRepository;
+            _unidadRepository = unidadRepository;
         }
 
         public async Task<PagedQueryResult<RecetaResultadoDTO>> ObtenerRecetasAsync(PagedQuery<RecetaFiltroParametrosDTO> pagedQuery)
@@ -123,10 +127,12 @@
         {
             var categorias = await _tipoPlatoRepository.ObtenerTipoPlatos();
             var ingredientes = await _ingredienteRepository.ObtenerIngredientes();
+            var unidades = await _unidadRepository.ObtenerUnidades();
             return new RecetaFiltroDTO
             {
                 Categorias = _mapper.Map<List<CategoriaDTO>>(categorias),
-                Ingredientes = _mapper.Map<List<IngredienteDTO>>(ingredientes)
+                Ingredientes = _mapper.Map<List<IngredienteDTO>>(ingredientes),
+                Unidades = _mapper.Map<List<UnidadDTO>>(unidades)
             };
         }
 
@@ -142,5 +148,6 @@
 
             return true;          
         }
+
     }
 }
