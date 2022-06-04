@@ -1,6 +1,8 @@
 ﻿namespace recipes_backend.Repositories.Interfaces
 {
     using recipes_backend.Models.Domain;
+    using recipes_backend.Dtos.Categoria;
+    using recipes_backend.Helpers.Query;
 
     public interface ITipoPlatoRepository
     {

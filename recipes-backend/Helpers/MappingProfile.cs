@@ -4,6 +4,7 @@
     using recipes_backend.Dtos.Categoria;
     using recipes_backend.Dtos.Ingrediente;
     using recipes_backend.Dtos.Receta;
+    using recipes_backend.Dtos.Unidad;
     using recipes_backend.Models.Domain;
 
     public class MappingProfile : Profile
@@ -18,7 +19,11 @@
             CreateMap<IngredienteDTO, Ingrediente>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.Nombre, opt => opt.MapFrom(src => src.Item))
-                .ReverseMap(); ;
+                .ReverseMap();
+            CreateMap<UnidadDTO, Unidad>()
+               .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+               .ForMember(dest => dest.Descripcion, opt => opt.MapFrom(src => src.Item))
+               .ReverseMap(); ;
         }
     }
 }

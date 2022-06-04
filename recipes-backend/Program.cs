@@ -59,6 +59,7 @@ services.AddScoped<IRecetaRepository, RecetaRepository>();
 services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 services.AddScoped<ITipoPlatoRepository, TipoPlatoRepository>();
 services.AddScoped<IIngredienteRepository, IngredienteRepository>();
+services.AddScoped<IUnidadRepository, UnidadRepository>();
 
 // Integrations
 services.AddScoped<IMailing, MailjetMailing>();
