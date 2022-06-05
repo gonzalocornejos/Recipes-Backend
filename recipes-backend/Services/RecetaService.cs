@@ -7,8 +7,10 @@
     using recipes_backend.Dtos.Receta;
     using recipes_backend.Dtos.Receta.Query;
     using recipes_backend.Dtos.Unidad;
+    using recipes_backend.Dtos.Utilizados;
     using recipes_backend.Exceptions;
     using recipes_backend.Helpers.Query;
+    using recipes_backend.Models.Domain;
     using recipes_backend.Repositories.Interfaces;
     using recipes_backend.Services.Interfaces;
     using System.Net;
@@ -62,13 +64,36 @@
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
-            var tipoPlato = await _tipoPlatoRepository.BuscarTipoPlato(recetaDTO.TipoPlatoId);
-            if (tipoPlato == null)
+            var tiposPlato = new List<TipoPlato>();
+            foreach(var categoria in recetaDTO.Categorias)
+            {
+                tiposPlato.Add( await _tipoPlatoRepository.BuscarTipoPlato(categoria.Id));
+            }
+            if (tiposPlato == null)
                 throw new AppException("Tipo de plato invalido", HttpStatusCode.NotFound);
 
+            var utilizados = new List<UtilizadoDTO>();
+            foreach(var ingrediente in recetaDTO.Ingredientes)
+            {
+                var newIngrediente = await _ingredienteRepository.ObtenerIngredienteByNombre(ingrediente.Nombre);
+                if(newIngrediente == null)
+                {
+                    newIngrediente = new Ingrediente(ingrediente.Nombre);
+                }
+
+                var unidad = await _unidadRepository.ObtenerUnidadByNombre(ingrediente.Unidad);
+                
+                if(unidad == null)
+                    throw new AppException("Unidad invalida", HttpStatusCode.NotFound);
+
+                utilizados.Add(new UtilizadoDTO(newIngrediente, Int32.Parse(ingrediente.Cantidad), unidad, ingrediente.Descripcion));
+
+            }
+
             usuario.CrearReceta(recetaDTO.Nombre, recetaDTO.Descripcion, recetaDTO.Foto, 
-                recetaDTO.Porciones, recetaDTO.CantidadPersonas, tipoPlato);
+                recetaDTO.Porciones, recetaDTO.Porciones, tiposPlato, recetaDTO.Pasos,utilizados);
             await _genericRepository.GuardarCambiosAsync();
+
         }
 
         public async Task<RecetaInfoDTO> EditarReceta(int usuarioId, int recetaId, EditarRecetaDTO recetaEditDTO)

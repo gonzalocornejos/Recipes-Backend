@@ -4,5 +4,6 @@
     public interface IIngredienteRepository
     {
         Task<List<Ingrediente>> ObtenerIngredientes();
+        Task<Ingrediente> ObtenerIngredienteByNombre(string nombre);
     }
 }

@@ -4,5 +4,6 @@
     public interface IUnidadRepository
     {
         Task<List<Unidad>> ObtenerUnidades();
+        Task<Unidad> ObtenerUnidadByNombre(string nombre);
     }
 }

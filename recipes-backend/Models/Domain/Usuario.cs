@@ -1,5 +1,8 @@
 ﻿namespace recipes_backend.Models.Domain
 {
+    using recipes_backend.Dtos.Ingrediente;
+    using recipes_backend.Dtos.Paso;
+    using recipes_backend.Dtos.Utilizados;
     using recipes_backend.Models.Domain.Enums;
     using recipes_backend.Models.ORM;
     using System.Linq;
@@ -81,10 +84,13 @@
         }
 
         public void CrearReceta(string nombre, string descripcion, string foto,
-            int porciones, int cantidadPersonas, TipoPlato tipoPlato)
+            int porciones, int cantidadPersonas, List<TipoPlato> tiposPlato, List<PasoDTO> pasos, List<UtilizadoDTO> ingredientes)
         {
             var receta = new Receta(this, nombre, descripcion, foto, 
-                porciones, cantidadPersonas, tipoPlato);
+                porciones, cantidadPersonas);
+            receta.AgregarPasos(pasos);
+            receta.AgregarTiposPlato(tiposPlato);
+            receta.AgregarIngredientes(ingredientes);
             _recetas.Add(receta);
         }
 

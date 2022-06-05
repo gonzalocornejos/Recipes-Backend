@@ -16,6 +16,13 @@
             _dbContext = dbContext;
         }
 
+        public async Task<Ingrediente> ObtenerIngredienteByNombre(string nombre)
+        {
+            return await _dbContext.Ingrediente
+                .Where(x => x.Nombre == nombre.ToLower().Trim())
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<List<Ingrediente>> ObtenerIngredientes()
         {
             return await _dbContext.Ingrediente

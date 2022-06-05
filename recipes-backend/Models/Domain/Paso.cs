@@ -1,9 +1,11 @@
 ﻿namespace recipes_backend.Models.Domain
 {
+    using recipes_backend.Dtos.Multimedia;
     using recipes_backend.Models.ORM;
     public class Paso : Entity
     {
         private Receta _receta;
+        private string _titulo;
         private int _nroPaso;
         private string _texto;
         private readonly List<Multimedia> _multimedias;
@@ -12,6 +14,10 @@
         {
             get { return _receta; }
             set { _receta = value; }
+        }
+        public string Titulo { 
+            get { return _titulo; }
+            set { _titulo = value; }
         }
 
         public int NroPaso
@@ -33,12 +39,21 @@
             _multimedias = new List<Multimedia>();
         }
 
-        public Paso(Receta receta, int nroPaso, string texto)
+        public Paso(Receta receta, int nroPaso, string texto, string titulo)
             : this()
         {
             Receta = receta;
             NroPaso = nroPaso;
             Texto = texto;
+            Titulo = titulo;
         }
+
+        public void AddMultimedias(List<String> multimedias)
+        {
+            foreach(var multimedia in multimedias)
+            {
+                Multimedias.ToList().Add(new Multimedia(this,Enums.TipoContenido.Foto,".jpg",multimedia));
+            }
+        } 
     }
 }
