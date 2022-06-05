@@ -33,8 +33,8 @@
             }));
             recipe.Pasos.ToList().ForEach(p => Pasos.Add(new PasoDTO {
                 Number = p.NroPaso,
-                Titulo = p.Texto,
-                Descripcion = p.Titulo,
+                Titulo = p.Titulo,
+                Descripcion = p.Texto,
                 Media = p.Multimedias.Select(m => m.UrlContenido).ToList()
             }));
         }
