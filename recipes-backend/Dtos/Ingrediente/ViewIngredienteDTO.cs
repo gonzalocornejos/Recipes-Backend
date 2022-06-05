@@ -4,7 +4,7 @@
     {
         public string Nombre { get; set; }
         public string Cantidad { get; set; }
-        public string Unidad { get; set; }
+        public int Unidad { get; set; }
         public string Descripcion { get; set; }
     }
 }

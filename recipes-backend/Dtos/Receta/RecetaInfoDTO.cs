@@ -22,13 +22,13 @@
             Nombre = recipe.Nombre;
             NombreUsuario = recipe.Usuario.NickName;
             Descripcion = recipe.Descripcion;
-            Categorias.Add(recipe.TipoPlato.Descripcion);
+            recipe.TiposPlato.ToList().ForEach(tp => Categorias.Add(tp.TipoPlato.Descripcion));
             Calificacion = recipe.Calificaciones.Count == 0 ? 0.0 : recipe.Calificaciones.Average(r => r.Puntaje);
             Porciones = recipe.Porciones;
             recipe.Ingredientes.ToList().ForEach(i => Ingredientes.Add(new ViewIngredienteDTO {
                 Nombre = i.Ingrediente.Nombre,
                 Cantidad = i.Cantidad.ToString(),
-                Unidad = i.Unidad.Descripcion,
+                Unidad = i.Unidad.Id,
                 Descripcion = i.Observaciones
             }));
             recipe.Pasos.ToList().ForEach(p => Pasos.Add(new PasoDTO {

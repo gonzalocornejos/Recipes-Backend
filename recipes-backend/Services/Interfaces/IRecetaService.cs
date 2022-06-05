@@ -35,7 +35,7 @@
         /// <returns>
         ///     Resultado Success o Fail del proceso
         /// </returns>
-        Task CrearReceta(int userId, CrearRecetaDTO recetaDTO);
+        Task CrearReceta(string userId, CrearRecetaDTO recetaDTO);
 
         Task<RecetaInfoDTO> EditarReceta(int usuarioId, int recetaId, EditarRecetaDTO recetaEditDTO);
 

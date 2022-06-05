@@ -26,7 +26,8 @@
                                     SELECT R.Id AS RecipeId, R.Nombre, R.Descripcion, R.Porciones, R.Foto, U.NickName, IIF(F.Id IS NULL, 0, 1)
 	                                FROM Receta R -- Cambiar estos LEFT por INNER despues de tener el modulo completo
 		                                LEFT JOIN Usuario U ON U.Id = R.UsuarioId
-		                                LEFT JOIN TipoPlato TP ON TP.Id = R.TipoPlatoId
+		                                LEFT JOIN RecetaTipoPlato RTP ON RTP.RecetaId = R.Id
+		                                LEFT JOIN TipoPlato TP ON TP.Id = RTP.TipoPlatoId
 		                                LEFT JOIN Utilizados UT ON UT.RecetaId = R.Id
 		                                LEFT JOIN Ingrediente I ON I.Id = UT.IngredienteId
 		                                INNER JOIN Usuario UL ON UL.NickName = @UsuarioLogueado
@@ -80,7 +81,8 @@
         {
             return await _dbContext.Receta
                 .Include(r => r.Usuario)
-                .Include(r => r.TipoPlato)
+                .Include(r => r.TiposPlato)
+                    .ThenInclude(tp => tp.TipoPlato)
                 .Include(r => r.Calificaciones)
                 .Include(r => r.Ingredientes)
                     .ThenInclude(i => i.Unidad)

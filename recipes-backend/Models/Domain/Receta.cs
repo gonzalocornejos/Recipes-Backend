@@ -12,7 +12,7 @@
         private string _foto;
         private int _porciones;
         private int _cantidadPersonas;
-        private readonly List<TipoPlato> _tiposPlato;
+        private readonly List<RecetaTipoPlato> _tiposPlato;
         private readonly List<Foto> _fotos;
         private readonly List<Utilizados> _ingredientes;
         private readonly List<Paso> _pasos;
@@ -55,7 +55,7 @@
             set { _cantidadPersonas = value; }
         }
 
-        public IReadOnlyList<TipoPlato> TiposPlato => _tiposPlato.ToList();
+        public IReadOnlyList<RecetaTipoPlato> TiposPlato => _tiposPlato.ToList();
 
         public IReadOnlyList<Foto> Fotos => _fotos.ToList();
 
@@ -69,7 +69,7 @@
 
         protected Receta()
         {
-            _tiposPlato = new List<TipoPlato>();
+            _tiposPlato = new List<RecetaTipoPlato>();
             _fotos = new List<Foto>();
             _ingredientes = new List<Utilizados>();
             _pasos = new List<Paso>();
@@ -90,12 +90,11 @@
 
         public void AgregarPasos(List<PasoDTO> pasosDTO)
         {
-            var pasos = new List<Paso>();
             foreach(var paso in pasosDTO)
             {
                 var newPaso = new Paso(this, paso.Number, paso.Descripcion, paso.Titulo);
                 newPaso.AddMultimedias(paso.Media);
-                pasos.Add(newPaso);
+                _pasos.Add(newPaso);
             }
         }
 
@@ -103,7 +102,7 @@
         {
             foreach(var tipo in tipoPlatos)
             {
-                TiposPlato.ToList().Add(tipo);
+                _tiposPlato.Add(new RecetaTipoPlato(this,tipo));
             }
         }
 
@@ -111,7 +110,7 @@
         {
             foreach (var ingrediente in ingredientes)
             {
-                Ingredientes.ToList().Add(new Utilizados(this,ingrediente.Ingrediente,ingrediente.Cantidad,ingrediente.Unidad,ingrediente.Descripcion));
+                _ingredientes.Add(new Utilizados(this,ingrediente.Ingrediente,ingrediente.Cantidad,ingrediente.Unidad,ingrediente.Descripcion));
             }
         }
     }

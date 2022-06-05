@@ -32,18 +32,18 @@
         /// <response code="404">Si alguna entity no fue encontrada</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPost]
-        [Route("{userId}")]
+        [Route("{userName}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CrearReceta([FromRoute, Required] int userId, [FromBody] CrearRecetaDTO recetaDTO)
+        public async Task<IActionResult> CrearReceta([FromRoute, Required] string userName, [FromBody] CrearRecetaDTO recetaDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");
 
-            await _recetaService.CrearReceta(userId, recetaDTO);
-            return StatusCode((int)HttpStatusCode.Created);
+            await _recetaService.CrearReceta(userName, recetaDTO);
+            return Ok();
         }
 
         /// <summary>

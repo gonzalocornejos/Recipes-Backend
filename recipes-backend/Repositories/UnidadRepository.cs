@@ -16,6 +16,13 @@
             _dbContext = dbContext;
         }
 
+        public async Task<Unidad> ObtenerUnidadById(int id)
+        {
+            return await _dbContext.Unidad
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<Unidad> ObtenerUnidadByNombre(string nombre)
         {
             return await _dbContext.Unidad

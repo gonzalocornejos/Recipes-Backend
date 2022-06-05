@@ -7,7 +7,7 @@ using recipes_backend.Data;
 
 #nullable disable
 
-namespace recipes_backend.Migrations
+namespace recipes_backend.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -190,6 +190,10 @@ namespace recipes_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RecetaId");
@@ -223,19 +227,37 @@ namespace recipes_backend.Migrations
                     b.Property<int>("Porciones")
                         .HasColumnType("int");
 
-                    b.Property<int>("TipoPlatoId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TipoPlatoId");
-
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Receta");
+                });
+
+            modelBuilder.Entity("recipes_backend.Models.Domain.RecetaTipoPlato", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("RecetaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TipoPlatoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecetaId");
+
+                    b.HasIndex("TipoPlatoId");
+
+                    b.ToTable("RecetaTipoPlato");
                 });
 
             modelBuilder.Entity("recipes_backend.Models.Domain.TipoPlato", b =>
@@ -438,21 +460,32 @@ namespace recipes_backend.Migrations
 
             modelBuilder.Entity("recipes_backend.Models.Domain.Receta", b =>
                 {
-                    b.HasOne("recipes_backend.Models.Domain.TipoPlato", "TipoPlato")
-                        .WithMany()
-                        .HasForeignKey("TipoPlatoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("recipes_backend.Models.Domain.Usuario", "Usuario")
                         .WithMany("Recetas")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TipoPlato");
-
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("recipes_backend.Models.Domain.RecetaTipoPlato", b =>
+                {
+                    b.HasOne("recipes_backend.Models.Domain.Receta", "Receta")
+                        .WithMany("TiposPlato")
+                        .HasForeignKey("RecetaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("recipes_backend.Models.Domain.TipoPlato", "TipoPlato")
+                        .WithMany()
+                        .HasForeignKey("TipoPlatoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Receta");
+
+                    b.Navigation("TipoPlato");
                 });
 
             modelBuilder.Entity("recipes_backend.Models.Domain.Utilizados", b =>
@@ -498,6 +531,8 @@ namespace recipes_backend.Migrations
                     b.Navigation("Ingredientes");
 
                     b.Navigation("Pasos");
+
+                    b.Navigation("TiposPlato");
                 });
 
             modelBuilder.Entity("recipes_backend.Models.Domain.Usuario", b =>

@@ -5,5 +5,7 @@
     {
         Task<List<Unidad>> ObtenerUnidades();
         Task<Unidad> ObtenerUnidadByNombre(string nombre);
+        Task<Unidad> ObtenerUnidadById(int id);
+
     }
 }
