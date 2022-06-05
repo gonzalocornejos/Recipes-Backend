@@ -53,7 +53,7 @@
             if (receta == null)
                 throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
 
-            return _mapper.Map<RecetaInfoDTO>(receta);
+            return new RecetaInfoDTO(receta);
         }
 
         public async Task CrearReceta(int userId, CrearRecetaDTO recetaDTO)

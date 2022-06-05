@@ -138,7 +138,7 @@
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> ObtenerReceta([FromRoute, Required] int recetaId)
+        public async Task<IActionResult> ObtenerReceta([FromRoute, Required] int recetaId)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");

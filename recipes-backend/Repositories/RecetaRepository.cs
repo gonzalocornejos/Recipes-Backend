@@ -39,6 +39,7 @@
                                         {Has(pagedQuery.Filter.IngredientesExcluidos, "AND I.Nombre NOT IN (@IngredientesExcluidos)", "")}
                                         {Has(pagedQuery.Filter.NickName, "AND U.NickName LIKE '%' + @Nickname + '%'", "")}    
                                         {(pagedQuery.Filter.SoloFavoritos ? "AND F.Id IS NOT NULL" : "")}
+                                    GROUP BY R.Id, R.Nombre, R.Descripcion, R.Porciones, R.Foto, U.NickName, F.Id
                                     ORDER BY {pagedQuery.SortField} {pagedQuery.SortOrder}
 	                                OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY
                                 ), ValoracionReceta (RecetaId, ValoracionPromedio) AS (
@@ -78,6 +79,15 @@
         public async Task<Receta> BuscarReceta(int recetaId)
         {
             return await _dbContext.Receta
+                .Include(r => r.Usuario)
+                .Include(r => r.TipoPlato)
+                .Include(r => r.Calificaciones)
+                .Include(r => r.Ingredientes)
+                    .ThenInclude(i => i.Unidad)
+                .Include(r => r.Ingredientes)
+                    .ThenInclude(i => i.Ingrediente)
+                .Include(r => r.Pasos)
+                    .ThenInclude(p => p.Multimedias)
                 .Where(r => r.Id == recetaId)
                 .FirstOrDefaultAsync();
         }
