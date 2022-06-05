@@ -1,0 +1,332 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>recipes-backend</name>
+    </assembly>
+    <members>
+        <member name="M:recipes_backend.Controllers.RecetasController.CrearReceta(System.Int32,recipes_backend.Dtos.Receta.CreateRecipeDTO)">
+            <summary>
+                Crea la receta.
+            </summary>
+            <returns>
+                El estado de finalizacion del proceso.
+            </returns>       
+            <param name="userId">Id del usuario que creará de la receta</param>
+            <param name="recetaDTO">Informacion de la receta a crear</param>
+            <response code="201">Si la receta pudo ser creada correctamente</response>
+            <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+            <response code="404">Si alguna entity no fue encontrada</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.RecetasController.EliminarReceta(System.Int32,System.Int32)">
+            <summary>
+                Elimina la receta.
+            </summary>
+            <param name="usuarioId">Id del usuario que eliminará la receta</param>
+            <param name="recetaId">Id de la receta a eliminar</param>
+            <response code="204">Si la receta pudo ser eliminada correctamente</response>        
+            <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+            <response code="403">Si no pudo eliminarse la receta por alguna autorizacion</response>
+            <response code="404">Si alguna entity no fue encontrada</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.RecetasController.EditarReceta(System.Int32,System.Int32,recipes_backend.Dtos.Receta.EditarRecetaDTO)">
+            <summary>
+                Edita la receta.
+            </summary>
+            <returns>
+                El modelo de la receta editada.
+            </returns>
+            <param name="usuarioId">Id del usuario propietario de la receta</param>
+            <param name="recetaId">Id de la receta a editar</param>
+            <param name="recetaEditDTO">Datos a cambiar de la receta</param>
+            <response code="200">Si la receta pudo ser editada correctamente</response>
+            <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+            <response code="404">Si alguna entity no fue encontrada</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.RecetasController.ObtenerRecetas(recipes_backend.Helpers.Query.PagedQuery{recipes_backend.Dtos.Receta.Query.RecetaFiltroParametrosDTO})">
+            <summary>
+                Obtiene las recetas.
+            </summary>
+            <returns>
+                Listado de recetas.
+            </returns>
+            <param name="pagedQuery">Paginado y filtro de la consulta</param>
+            <response code="200">Si las recetas pudieron ser buscadas correctamente</response>
+            <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.RecetasController.ObtenerReceta(System.Int32)">
+            <summary>
+                Obtiene una receta.
+            </summary>
+            <returns>
+                La infromacion de la receta pedida.
+            </returns>
+            <param name="recetaId">Id de la receta a buscar</param>
+            <response code="200">Si la receta pudo ser buscada correctamente</response>
+            <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+            <response code="404">Si no se encontro la receta</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.RecetasController.ManejarFavorito(System.String,System.Int32)">
+            <summary>
+                Agrega o elimina de favoritos una receta determinada.
+            </summary>
+            <param name="userId">Id del usuario a manejar el favorito</param>
+            <param name="recetaId">Id de la receta a togglear el favorito</param>
+            <response code="204">Si la receta pudo ser agregada o eliminada de favoritos correctamente</response>
+            <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+            <response code="404">Si no se encontro alguna entity</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.RecetasController.ObtenerFiltros">
+            <summary>
+                Obtiene los filtros disponibles para realizar la busqueda de una receta.
+            </summary>
+            <returns>
+                Filtros para buscar una receta.
+            </returns>
+            <response code="200">Si se pudieron obtener los filtros correctamente</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.RecetasController.VerificarNombreRecetaExsitente(System.Int32,System.String)">
+            <summary>
+                Verifica que el usuario creador de la receta no tenga una receta ya creada con ese nombre.
+            </summary>
+            <param name="usuarioId">Usuario creador de la receta</param>
+            <param name="nombreReceta">Nombre de la receta a verificar</param>
+            <response code="200">Si el usuario tiene una receta con el nombre</response>
+            <response code="400">Si algun parametro no fue enviado correctamente</response>
+            <response code="404">Si no se ha encontrado ninguna receta con ese nombre</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.RecetasController.ValidarReceta(System.Int32)">
+            <summary>
+                Valida si una receta es apta para publicar.
+            </summary>
+            <param name="recetaId">Id de la receta a validar</param>
+            <response code="204">Si la receta fue validada correctamente</response>
+            <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+            <response code="404">Si no se encontro alguna entity</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.RecetasController.Puntuar(System.Int32,System.Int32)">
+            <summary>
+                Agrega una puntacion a la receta.
+            </summary>
+            <param name="recetaId">Id de la receta a puntuar</param>
+            <param name="puntaje">Puntaje</param>
+            <response code="204">Si la receta fue puntuada correctamente</response>
+            <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+            <response code="404">Si no se encontro alguna entity</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.UsuariosController.IniciarSesion(recipes_backend.Dtos.Usuario.Authentication.LoguearseDTO)">
+            <summary>
+                Inicia sesion.
+            </summary>
+            <returns>
+                Autorizacion del usuario.
+            </returns>
+            <param name="credenciales">Credenciales para el logueo</param>
+            <response code="204">Si las credenciales son validas</response>
+            <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+            <response code="401">Si las credenciales son invalidas para autenticar</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.UsuariosController.Registrarse(recipes_backend.Dtos.Usuario.Authentication.RegistroDTO)">
+            <summary>
+                Registra al usuario.
+            </summary>
+            <returns>
+                Estado de finalizacion del proceso de registro.
+            </returns>
+            <param name="registroData">Credenciales para registrarse</param>
+            <response code="204">Si las credenciales son validas para registrar</response>
+            <response code="400">Si las credenciales son invalidas para registrar</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.UsuariosController.ChequearPrimerPasoRegistro(recipes_backend.Dtos.Usuario.Authentication.PrimerPasoRegistroDTO)">
+            <summary>
+                Valida si los datos enviados en el primer proceso de registro son correctos o validos.
+            </summary>
+            <returns>
+                Validacion correcta o denegada.
+            </returns>
+            <param name="primerPasoRegistroData">Credenciales para el primer paso del registro</param>
+            <response code="204">Si las credenciales son validas para seguir en el proceso de registro</response>
+            <response code="400">Si las credenciales son invalidas para seguir en el proceso de registro</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.UsuariosController.RecuperarContraseña(System.Int32)">
+            <summary>
+                Envia un codigo de validacion via mail al usuario
+            </summary>
+            <returns>
+                Estado del proceso de finalizacion del envio de email.
+            </returns>
+            <param name="usuarioId">Id del usuario que quiere recuperar la contraseña</param>
+            <response code="200">Si se ha enviado correctamente el codigo de validacion de cambio de contraseña</response>
+            <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+            <response code="404">Si no se encontro el usuario</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.UsuariosController.ChequearCodigoValidacion(System.Int32,recipes_backend.Dtos.Usuario.Authentication.RecuperarContraseñaDTO)">
+            <summary>
+                Valida si el codigo de validacion para recuperar la contraseña es correcto.
+            </summary>
+            <returns>
+                Validacion correcta o incorrecta.
+            </returns>
+            <param name="usuarioId">Id del usuario</param>
+            <param name="recuperacionData">Codigo de validacion</param>
+            <response code="204">Si el codigo de validacion es correcto</response>
+            <response code="400">Si el codigo de validacion es incorrecto</response>
+            <response code="404">Si no se encontro el usuario</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="M:recipes_backend.Controllers.UsuariosController.CambiarContraseña(System.Int32,recipes_backend.Dtos.Usuario.Authentication.CambiarContraseñaDTO)">
+            <summary>
+                Cambia la contraseña.
+            </summary>
+            <returns>
+                Estado del proceso de finalizacion del cambio de contraseña.
+            </returns>
+            <param name="usuarioId">Id del usuario</param>
+            <param name="cambiarContraseñaData">Nueva contraseña</param>
+            <response code="204">Si la contraseña ha podido modificarse correctamente</response>
+            <response code="400">Si la contraseña no ha podido modificarse correctamente por algun parametro</response>
+            <response code="404">Si no se encontro el usuario</response>
+            <response code="500">En el caso de haber un problema interno en el codigo</response>
+        </member>
+        <member name="T:recipes_backend.Helpers.Middleware.ExceptionHandler">
+            <summary>
+               Middleware principal de manejo de excepciones en controladores. Las
+               excepciones pueden provenir desde el controlador en sí mismo, o
+               desde un nivel inferior dentro de la aplicación.
+            </summary>
+        </member>
+        <member name="M:recipes_backend.Helpers.Middleware.ExceptionHandler.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+               Procesa el mensaje, atrapando las excepciones generadas.
+            </summary>
+        </member>
+        <member name="T:recipes_backend.Helpers.Query.Type">
+            <summary>
+               Métodos para simplificar la creación de parámetros de SQL, y la
+               construcción de consultas complejas de forma programática.
+            </summary>
+        </member>
+        <member name="M:recipes_backend.Repositories.Interfaces.IGenericRepository.GuardarCambiosAsync">
+            <summary>
+                Guarda los cambios en la base de datos de forma sincronica
+            </summary>
+        </member>
+        <member name="M:recipes_backend.Repositories.Interfaces.IGenericRepository.GuardarCambios">
+            <summary>
+                Guarda los cambios en la base de datos de forma asincronica
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:recipes_backend.Repositories.Interfaces.IGenericRepository.Agregar(recipes_backend.Models.ORM.Entity)">
+            <summary>
+                Agrega la entity a la base de datos. [Es recomendable utilizar el trackeo del ORM]
+            </summary>
+            <param name="entity">entity a agregar</param>
+        </member>
+        <member name="M:recipes_backend.Repositories.Interfaces.IGenericRepository.Actualizar(recipes_backend.Models.ORM.Entity)">
+            <summary>
+                Actualiza toda la entity en la base de datos. [Es recomendable utilizar el trackeo del ORM]
+            </summary>
+            <param name="entity">entity a agregar</param>
+        </member>
+        <member name="M:recipes_backend.Repositories.Interfaces.IGenericRepository.Eliminar(recipes_backend.Models.ORM.Entity)">
+            <summary>
+                Elimina la entity en la base de datos. [Es recomendable utilizar el trackeo del ORM]
+            </summary>
+            <param name="entity">entity a agregar</param>
+        </member>
+        <member name="M:recipes_backend.Repositories.Interfaces.IRecetaRepository.BuscarRecetas(recipes_backend.Helpers.Query.PagedQuery{recipes_backend.Dtos.Receta.Query.RecetaFiltroParametrosDTO})">
+            <summary>
+                Busca y pagina en la base de datos las recetas, 
+                teniendo en cuenta los parametros recibidos.
+            </summary>
+            <param name="pagedQuery"></param>
+            <returns>
+                Listado de recetas con su respectivo paginado
+            </returns>
+        </member>
+        <member name="M:recipes_backend.Repositories.Interfaces.IRecetaRepository.BuscarReceta(System.Int32)">
+            <summary>
+                Busca en la base de datos una receta individual.
+            </summary>
+            <param name="recetaId"></param>
+            <returns>
+                Receta individual.
+            </returns>
+        </member>
+        <member name="M:recipes_backend.Repositories.Interfaces.ITipoPlatoRepository.BuscarTipoPlato(System.Int32)">
+            <summary>
+                Busca el tipo plato teniendo en cuenta
+                el id pasado por parametro
+            </summary>
+            <param name="idTipoPlato"></param>
+            <returns>
+                El tipo plato encontrado
+            </returns>
+        </member>
+        <member name="M:recipes_backend.Repositories.Interfaces.IUsuarioRepository.BuscarUsuario(System.Int32)">
+            <summary>
+                Busca un usuario teniendo en cuenta el id 
+                pasado por parametro
+            </summary>
+            <param name="usuarioId"></param>
+            <returns>
+                El usuario encontrado
+            </returns>
+        </member>
+        <member name="M:recipes_backend.Services.Interfaces.IRecetaService.ObtenerRecetasAsync(recipes_backend.Helpers.Query.PagedQuery{recipes_backend.Dtos.Receta.Query.RecetaFiltroParametrosDTO})">
+            <summary>
+                Obtiene de manera sincronica las recetas con los
+                parametros recibidos.
+            </summary>
+            <param name="pagedQuery"></param>
+            <returns>
+                Listado de recetas.
+            </returns>
+        </member>
+        <member name="M:recipes_backend.Services.Interfaces.IRecetaService.ObtenerRecetaInfoAsync(System.Int32)">
+            <summary>
+                Obtiene de manera sincronica una receta en especifico.
+            </summary>
+            <param name="recetaId"></param>
+            <returns>
+                La receta cuyo parametro es pasado por parametro.
+            </returns>
+        </member>
+        <member name="M:recipes_backend.Services.Interfaces.IRecetaService.CrearReceta(System.Int32,recipes_backend.Dtos.Receta.CreateRecipeDTO)">
+            <summary>
+                Busca al usuario para luego darle la responsabilidad
+                de crear su receta.
+            </summary>
+            <param name="userId"></param>
+            <param name="recetaDTO"></param>
+            <returns>
+                Resultado Success o Fail del proceso
+            </returns>
+        </member>
+        <member name="M:recipes_backend.Services.Interfaces.IRecetaService.EliminarReceta(System.Int32,System.Int32)">
+            <summary>
+                Busca al usuario para luego darle la responsabilidad 
+                de eliminar su receta.
+            </summary>
+            <param name="userId"></param>
+            <param name="recetaId"></param>
+            <returns>
+                Resultado Success o Fail del proceso
+            </returns>
+        </member>
+    </members>
+</doc>
