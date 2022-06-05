@@ -11,8 +11,8 @@ using recipes_backend.Data;
 namespace recipes_backend.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220605184923_tipoPlatoManyToMany")]
-    partial class tipoPlatoManyToMany
+    [Migration("20220605213219_creating-db")]
+    partial class creatingdb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
