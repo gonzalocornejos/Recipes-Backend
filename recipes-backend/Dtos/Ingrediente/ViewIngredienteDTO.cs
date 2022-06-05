@@ -2,9 +2,9 @@
 {
     public class ViewIngredienteDTO
     {
-        public string Name { get; set; }
-        public string Cant { get; set; }
-        public string Unit { get; set; }
-        public string Desc { get; set; }
+        public string Nombre { get; set; }
+        public string Cantidad { get; set; }
+        public string Unidad { get; set; }
+        public string Descripcion { get; set; }
     }
 }
