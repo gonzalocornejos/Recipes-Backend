@@ -26,16 +26,16 @@
             Calificacion = recipe.Calificaciones.Count == 0 ? 0.0 : recipe.Calificaciones.Average(r => r.Puntaje);
             Porciones = recipe.Porciones;
             recipe.Ingredientes.ToList().ForEach(i => Ingredientes.Add(new ViewIngredienteDTO {
-                Name = i.Ingrediente.Nombre,
-                Cant = i.Cantidad.ToString(),
-                Unit = i.Unidad.Descripcion,
-                Desc = i.Observaciones
+                Nombre = i.Ingrediente.Nombre,
+                Cantidad = i.Cantidad.ToString(),
+                Unidad = i.Unidad.Descripcion,
+                Descripcion = i.Observaciones
             }));
             recipe.Pasos.ToList().ForEach(p => Pasos.Add(new PasoDTO {
                 Number = p.NroPaso,
                 Title = p.Texto,
                 Descripcion = p.Texto,
-                Images = p.Multimedias.Select(m => m.UrlContenido).ToList()
+                Media = p.Multimedias.Select(m => m.UrlContenido).ToList()
             }));
         }
     }
