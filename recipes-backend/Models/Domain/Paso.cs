@@ -52,7 +52,7 @@
         {
             foreach(var multimedia in multimedias)
             {
-                Multimedias.ToList().Add(new Multimedia(this,Enums.TipoContenido.Foto,".jpg",multimedia));
+                _multimedias.Add(new Multimedia(this,Enums.TipoContenido.Foto,".jpg",multimedia));
             }
         } 
     }
