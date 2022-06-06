@@ -6,5 +6,8 @@
     {
         Task Loguearse(LoguearseDTO credenciales);
         Task RecuperarContraseña(int usuarioId);
+        Task ChequearPrimerPasoRegistro(PrimerPasoRegistroDTO credencialesPrueba); 
+        Task Registrarse(RegistroDTO credenciales);
+        Task ActivarUsuario(string alias);
     }
 }

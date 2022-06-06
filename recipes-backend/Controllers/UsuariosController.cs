@@ -62,7 +62,8 @@
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");
 
-            return StatusCode((int)HttpStatusCode.NotImplemented);
+            await _usuarioService.Registrarse(registroData);
+            return NoContent();
         }
 
         /// <summary>
@@ -84,8 +85,8 @@
         {
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");
-
-            return StatusCode((int)HttpStatusCode.NotImplemented);
+            await _usuarioService.ChequearPrimerPasoRegistro(primerPasoRegistroData);
+            return NoContent();
         }
 
         /// <summary>
@@ -164,6 +165,17 @@
                 return BadRequest("Parametros enviados incorrectamente");
 
             return StatusCode((int)HttpStatusCode.NotImplemented);
+        }
+
+        [HttpGet]
+        [Route("activar/{userName}")]
+        public async Task<IActionResult> ActivarUsuario([FromRoute, Required] string userName)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
+
+            await _usuarioService.ActivarUsuario(userName);
+            return NoContent();
         }
     }
 }

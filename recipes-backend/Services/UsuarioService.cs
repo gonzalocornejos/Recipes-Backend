@@ -3,6 +3,8 @@
     using recipes_backend.Data;
     using recipes_backend.Dtos.Usuario.Authentication;
     using recipes_backend.Exceptions;
+    using recipes_backend.Models.Domain;
+    using recipes_backend.Models.Domain.Enums;
     using recipes_backend.Repositories.Interfaces;
     using recipes_backend.Services.Interfaces;
     using System.Net;
@@ -22,6 +24,7 @@
             _mailingService = mailingService;
             _genericRepository = genericRepository;
         }
+
 
         public async Task Loguearse(LoguearseDTO credenciales)
         {
@@ -44,6 +47,38 @@
             await _genericRepository.GuardarCambiosAsync();
 
             await _mailingService.EnviarCodigoValidacion(usuario.Mail, nuevoCodigoValidacion);
+        }
+
+        public async Task Registrarse(RegistroDTO credenciales)
+        {
+            if (credenciales.Contraseña != credenciales.ContraseñaRepetida)
+                throw new AppException("Las contraseñas no coinciden", HttpStatusCode.BadRequest);
+
+            var usuario = new Usuario(credenciales.Email.Trim(), credenciales.Alias, credenciales.Contraseña, false, credenciales.Alias, "", TipoUsuario.Visitante);
+            await _genericRepository.Agregar(usuario);
+            await _genericRepository.GuardarCambiosAsync();
+
+            await _mailingService.EnviarMaildeActivacion(credenciales.Email.Trim(), credenciales.Alias);
+        }
+
+        public async Task ChequearPrimerPasoRegistro(PrimerPasoRegistroDTO credencialesPrueba)
+        {
+            var usuarioEmail = await _usuarioRepository.BuscarUsuarioPorMail(credencialesPrueba.Email.Trim());
+            if (usuarioEmail != null)
+                throw new AppException("El email ya existe", HttpStatusCode.BadRequest);
+
+            var usuarioNickname = await _usuarioRepository.BuscarUsuario(credencialesPrueba.Alias);
+            if (usuarioNickname != null)
+                throw new AppException("El alias ya existe", HttpStatusCode.BadRequest);            
+        }
+
+        public async Task ActivarUsuario(string alias)
+        {
+            var usuario = await _usuarioRepository.BuscarUsuario(alias);
+            if (usuario == null)
+                throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
+            usuario.ActivarUsuario();
+            await _genericRepository.GuardarCambiosAsync();
         }
     }
 }

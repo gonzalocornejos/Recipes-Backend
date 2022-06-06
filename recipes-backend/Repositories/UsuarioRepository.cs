@@ -40,5 +40,13 @@
                 .FirstOrDefaultAsync();
             return usuario;
         }
+
+        public async Task<Usuario> BuscarUsuarioPorMail(string email)
+        {
+            var usuario = await _dbContext.Usuario
+                .Where(u => u.NickName == email)
+                .FirstOrDefaultAsync();
+            return usuario;
+        }
     }
 }

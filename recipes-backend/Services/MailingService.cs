@@ -18,5 +18,10 @@
         {
             await mailingIntegration.EnviarCodigoValidacion(emailDestino, codigoValidacion);
         }
+
+        public async Task EnviarMaildeActivacion(string emailDestino, string nickName)
+        {
+            await mailingIntegration.EnviarMaildeValidacion(emailDestino, nickName);
+        }
     }
 }

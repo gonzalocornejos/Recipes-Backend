@@ -17,5 +17,6 @@
         Task<Usuario> BuscarUsuario(string nickName);
 
         Task<bool> VerificarCredencialesLogueo(LoguearseDTO credenciales);
+        Task<Usuario> BuscarUsuarioPorMail(string email);
     }
 }

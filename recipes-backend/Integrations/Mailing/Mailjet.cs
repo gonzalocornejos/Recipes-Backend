@@ -22,7 +22,7 @@
             MailjetRequest request = new MailjetRequest
             {
                 Resource = Send.Resource
-            }.Property(Send.FromEmail, "recetasUADE@gmail.com") // TODO: Crear el mail y asociarlo a Mailjet
+            }.Property(Send.FromEmail, "santisemhan3@gmail.com") // TODO: Crear el mail y asociarlo a Mailjet
              .Property(Send.FromName, "Recetas UADE")
              .Property(Send.Recipients, new JArray
              {
@@ -38,6 +38,32 @@
             MailjetResponse response = await _client.PostAsync(request);
 
             if (!response.IsSuccessStatusCode) {
+                throw new Exception("No se ha podido enviar el codigo de validación");
+            }
+        }
+
+        public async Task EnviarMaildeValidacion(string emailDestino, string nickName)
+        {
+            MailjetRequest request = new MailjetRequest
+            {
+                Resource = Send.Resource
+            }.Property(Send.FromEmail, "santisemhan3@gmail.com") // TODO: Crear el mail y asociarlo a Mailjet
+             .Property(Send.FromName, "Recetas UADE")
+             .Property(Send.Recipients, new JArray
+             {
+                 new JObject
+                 {
+                     {"Email", emailDestino }
+                 }
+             })
+             .Property(Send.Subject, "CREASTE TU CUENTA - RECETAS UADE")
+             .Property(Send.TextPart, "Valide su cuenta para poder empezar a utilizarla")
+             .Property(Send.HtmlPart, "<h3>Hace click en: https://recipesuadeapi.azurewebsites.net/api/usuarios/activar/" + $"{nickName} </h3>"); // TODO: Hacer un html mas lindo
+
+            MailjetResponse response = await _client.PostAsync(request);
+
+            if (!response.IsSuccessStatusCode)
+            {
                 throw new Exception("No se ha podido enviar el codigo de validación");
             }
         }

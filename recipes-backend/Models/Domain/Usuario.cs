@@ -72,13 +72,14 @@
             _favoritas = new List<Favorita>();
         }
 
-        public Usuario(string mail, string nickName, bool habilitado, string nombre, string avatar, TipoUsuario tipoUsuario)
+        public Usuario(string mail, string nickName, string contraseña, bool habilitado, string nombre, string avatar, TipoUsuario tipoUsuario)
             : this()
         {
             Mail = mail;
             NickName = nickName;
             Habilitado = habilitado;
             Nombre = nombre;
+            Contraseña = contraseña;
             Avatar = avatar;
             TipoUsuario = tipoUsuario;
         }
@@ -110,6 +111,11 @@
                 return;
             }
             _favoritas.Remove(favorita);
+        }
+
+        public void ActivarUsuario()
+        {
+            Habilitado = true;
         }
     }
 }
