@@ -226,7 +226,7 @@
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
             var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario, recetaDTO.Nombre);
-            await EliminarReceta(usuario.Id, receta.Id);
+            await EliminarReceta(usuario.NickName, receta.Id);
             await CrearReceta(userName, recetaDTO);
         }
 
