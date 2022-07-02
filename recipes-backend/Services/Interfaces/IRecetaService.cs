@@ -37,7 +37,7 @@
         /// </returns>
         Task CrearReceta(string userId, CrearRecetaDTO recetaDTO);
 
-        Task<RecetaInfoDTO> EditarReceta(int usuarioId, int recetaId, EditarRecetaDTO recetaEditDTO);
+        Task<RecetaInfoDTO> EditarReceta(string usuarioName, CrearRecetaDTO recetaEditDTO);
 
         /// <summary>
         ///     Busca al usuario para luego darle la responsabilidad 
@@ -55,5 +55,9 @@
         Task<RecetaFiltroDTO> ObtenerFiltros();
 
         Task<bool> ValidarReceta(int recetaId);
+
+        Task<bool> VerificarNombreRecetaExsitente(string nickName, string nombreReceta);
+        Task<RecetaInfoDTO> ObtenerRecetaInfoByNombre(string nickName, string nombreReceta);
+        Task SobreescribirReceta(string userName, CrearRecetaDTO recetaDTO);
     }
 }

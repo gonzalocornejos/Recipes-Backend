@@ -24,5 +24,15 @@
         ///     Receta individual.
         /// </returns>
         Task<Receta> BuscarReceta(int recetaId);
+
+        /// <summary>
+        ///     Busca en la base de datos su nombre y el usuario.
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <param name="recetaName"></param>
+        /// <returns>
+        ///     Receta individual.
+        /// </returns>
+        Task<Receta> BuscarRecetaByNameAndUsuario(Usuario usuario, string recetaName);
     }
 }

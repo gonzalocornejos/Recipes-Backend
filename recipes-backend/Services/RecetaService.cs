@@ -95,22 +95,46 @@
             await _genericRepository.GuardarCambiosAsync();
         }
 
-        public async Task<RecetaInfoDTO> EditarReceta(int usuarioId, int recetaId, EditarRecetaDTO recetaEditDTO)
+        public async Task<RecetaInfoDTO> EditarReceta(string usuarioName, CrearRecetaDTO recetaEditDTO)
         {
-            var usuario = await _usuarioRepository.BuscarUsuario(usuarioId);
+            var usuario = await _usuarioRepository.BuscarUsuario(usuarioName);
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
-            var receta = await _recetaRepository.BuscarReceta(recetaId);
+            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario, recetaEditDTO.Nombre);
             if (receta == null)
                 throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
 
             if (receta.Usuario != usuario)
                 throw new AppException("No autorizado a eliminar la receta", HttpStatusCode.Forbidden);
 
-            //...
-            // Logica de editar receta
-            // ...
+            var tiposPlato = new List<TipoPlato>();
+            foreach (var categoria in recetaEditDTO.Categorias)
+            {
+                tiposPlato.Add(await _tipoPlatoRepository.BuscarTipoPlato(categoria.Categoria.Id));
+            }
+            if (tiposPlato == null)
+                throw new AppException("Tipo de plato invalido", HttpStatusCode.NotFound);
+
+            var utilizados = new List<UtilizadoDTO>();
+            foreach (var ingrediente in recetaEditDTO.Ingredientes)
+            {
+                var newIngrediente = await _ingredienteRepository.ObtenerIngredienteByNombre(ingrediente.Nombre);
+                if (newIngrediente == null)
+                {
+                    newIngrediente = new Ingrediente(ingrediente.Nombre);
+                }
+
+                var unidad = await _unidadRepository.ObtenerUnidadById(ingrediente.Unidad);
+
+                if (unidad == null)
+                    throw new AppException("Unidad invalida", HttpStatusCode.NotFound);
+
+                utilizados.Add(new UtilizadoDTO(newIngrediente, Int32.Parse(ingrediente.Cantidad), unidad, ingrediente.Descripcion));
+
+            }
+
+            receta.EditarReceta(usuario, recetaEditDTO.Nombre, recetaEditDTO.Descripcion, recetaEditDTO.Imagen, recetaEditDTO.Porciones, recetaEditDTO.Porciones, recetaEditDTO.Pasos, tiposPlato, utilizados);
 
             await _genericRepository.GuardarCambiosAsync();
             return _mapper.Map<RecetaInfoDTO>(receta);
@@ -171,6 +195,39 @@
             // ...
 
             return true;          
+        }
+
+        public async Task<bool> VerificarNombreRecetaExsitente(string nickName, string nombreReceta)
+        {
+            var usuario = await _usuarioRepository.BuscarUsuario(nickName);
+            if (usuario == null)
+                throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
+
+            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario, nombreReceta);
+            if (receta == null) 
+                return false;
+            return true;
+        }
+
+        public async Task<RecetaInfoDTO> ObtenerRecetaInfoByNombre(string nickName, string nombreReceta)
+        {
+            var usuario = await _usuarioRepository.BuscarUsuario(nickName);
+            if (usuario == null)
+                throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
+
+            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario, nombreReceta);
+
+            return new RecetaInfoDTO(receta);
+        }
+
+        public async Task SobreescribirReceta(string userName, CrearRecetaDTO recetaDTO)
+        {
+            var usuario = await _usuarioRepository.BuscarUsuario(userName);
+            if (usuario == null)
+                throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
+            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario, recetaDTO.Nombre);
+            await EliminarReceta(usuario.Id, receta.Id);
+            await CrearReceta(userName, recetaDTO);
         }
 
     }

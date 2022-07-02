@@ -78,25 +78,24 @@
         /// <returns>
         ///     El modelo de la receta editada.
         /// </returns>
-        /// <param name="usuarioId">Id del usuario propietario de la receta</param>
-        /// <param name="recetaId">Id de la receta a editar</param>
+        /// <param name="usuarioName">Id del usuario propietario de la receta</param>
         /// <param name="recetaEditDTO">Datos a cambiar de la receta</param>
         /// <response code="200">Si la receta pudo ser editada correctamente</response>
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="404">Si alguna entity no fue encontrada</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPatch]
-        [Route("{usuarioId}/{idReceta}")]
+        [Route("editar/{usuarioName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> EditarReceta([FromRoute, Required] int usuarioId, [FromRoute, Required] int recetaId, [FromBody] EditarRecetaDTO recetaEditDTO)
+        public async Task<IActionResult> EditarReceta([FromRoute, Required] string usuarioName,[FromBody] CrearRecetaDTO recetaEditDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");
 
-            var recetaEditada = await _recetaService.EditarReceta(usuarioId, recetaId, recetaEditDTO);
+            var recetaEditada = await _recetaService.EditarReceta(usuarioName, recetaEditDTO);
             return Ok(recetaEditada);
         }
 
@@ -199,17 +198,19 @@
         /// <response code="404">Si no se ha encontrado ninguna receta con ese nombre</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpGet]
-        [Route("{usuarioId}/existente")]
+        [Route("existente/{nickName}/{nombreReceta}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> VerificarNombreRecetaExsitente([Required, FromRoute] int usuarioId, [Required, FromQuery] string nombreReceta)
+        public async Task<IActionResult> VerificarNombreRecetaExsitente([Required, FromRoute] string nickName ,[Required, FromRoute] string nombreReceta)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");
 
-            return StatusCode((int)HttpStatusCode.NotImplemented);
+            var result = await _recetaService.VerificarNombreRecetaExsitente(nickName,nombreReceta);
+
+            return Ok(result);
         }
 
         /// <summary>
@@ -256,6 +257,60 @@
                 return BadRequest("Parametros enviados incorrectamente");
 
             return StatusCode((int)HttpStatusCode.NotImplemented);
+        }
+
+        /// <summary>
+        ///     Obtiene una receta por el nombre.
+        /// </summary>
+        /// <returns>
+        ///     La infromacion de la receta pedida.
+        /// </returns>
+        /// <param name="recetaName">Nombre de la receta a buscar</param>
+        /// <param name="userName">Nombre del usuraio a buscar</param>
+        /// <response code="200">Si la receta pudo ser buscada correctamente</response>
+        /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+        /// <response code="404">Si no se encontro la receta</response>
+        /// <response code="500">En el caso de haber un problema interno en el codigo</response>
+        [HttpGet]
+        [Route("{userName}/{recetaName}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ObtenerRecetaPorNombre([FromRoute, Required] string recetaName, [FromRoute, Required] string userName)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
+
+            var receta = await _recetaService.ObtenerRecetaInfoByNombre(userName,recetaName);
+            return Ok(receta);
+        }
+
+        /// <summary>
+        ///     Sobreescribir la receta.
+        /// </summary>
+        /// <returns>
+        ///     El estado de finalizacion del proceso.
+        /// </returns>       
+        /// <param name="userName">Id del usuario que creará de la receta</param>
+        /// <param name="recetaDTO">Informacion de la receta a sobreescribir</param>
+        /// <response code="201">Si la receta pudo ser creada correctamente</response>
+        /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
+        /// <response code="404">Si alguna entity no fue encontrada</response>
+        /// <response code="500">En el caso de haber un problema interno en el codigo</response>
+        [HttpPost]
+        [Route("sobreescribir/{userName}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SobreescribirReceta([FromRoute, Required] string userName, [FromBody] CrearRecetaDTO recetaDTO)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
+
+            await _recetaService.SobreescribirReceta(userName, recetaDTO);
+            return Ok();
         }
     }
 }

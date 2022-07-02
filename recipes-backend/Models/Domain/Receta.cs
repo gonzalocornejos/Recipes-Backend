@@ -113,5 +113,21 @@
                 _ingredientes.Add(new Utilizados(this,ingrediente.Ingrediente,ingrediente.Cantidad,ingrediente.Unidad,ingrediente.Descripcion));
             }
         }
+
+        public void EditarReceta(Usuario usuario, string nombre, string descripcion, string foto,
+            int porciones, int cantidadPersonas, List<PasoDTO> pasosDTO, List<TipoPlato> tipoPlatos, List<UtilizadoDTO> ingredientes)
+        {
+            _pasos.Clear();
+            _ingredientes.Clear();
+            _tiposPlato.Clear();
+            Nombre = nombre;
+            Descripcion = descripcion;
+            Foto = foto;
+            Porciones = porciones;
+            CantidadPersonas = cantidadPersonas;
+            AgregarPasos(pasosDTO);
+            AgregarTiposPlato(tipoPlatos);
+            AgregarIngredientes(ingredientes);
+        }
     }
 }

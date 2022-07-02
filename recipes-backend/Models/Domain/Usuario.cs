@@ -94,7 +94,6 @@
             receta.AgregarIngredientes(ingredientes);
             _recetas.Add(receta);
         }
-
         public void EliminarReceta(Receta recetaAEliminar)
         {
             _recetas.RemoveAll(receta => receta == recetaAEliminar);

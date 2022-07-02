@@ -93,5 +93,23 @@
                 .Where(r => r.Id == recetaId)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<Receta> BuscarRecetaByNameAndUsuario(Usuario usuario, string recetaName)
+        {
+            return await _dbContext.Receta
+               .Include(r => r.Usuario)
+               .Include(r => r.TiposPlato)
+                   .ThenInclude(tp => tp.TipoPlato)
+               .Include(r => r.Calificaciones)
+               .Include(r => r.Ingredientes)
+                   .ThenInclude(i => i.Unidad)
+               .Include(r => r.Ingredientes)
+                   .ThenInclude(i => i.Ingrediente)
+               .Include(r => r.Pasos)
+                   .ThenInclude(p => p.Multimedias)
+               .Where(r => r.Nombre == recetaName)
+               .Where(r => r.Usuario == usuario)
+               .FirstOrDefaultAsync();
+        }
     }
 }
