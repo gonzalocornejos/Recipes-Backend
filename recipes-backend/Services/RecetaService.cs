@@ -230,5 +230,30 @@
             await CrearReceta(userName, recetaDTO);
         }
 
+        public async Task Puntuar(int recetaId, string username, int puntaje)
+        {
+            var receta = await _recetaRepository.BuscarReceta(recetaId);
+            if (receta == null)
+                throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
+
+            var usuario = await _usuarioRepository.BuscarUsuario(username);
+            if (usuario == null)
+                throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
+
+            var calificacion = await _recetaRepository.ObtenerCalificacionRecetaPorUsuario(recetaId, username);
+            if (!(calificacion is null))
+                await _genericRepository.Eliminar(calificacion);
+            
+            usuario.CalificarReceta(receta, puntaje);
+            await _genericRepository.GuardarCambiosAsync();
+        }
+
+        public async Task<int> ObtenerPuntajeRecetaPorUsuario(int recetaId, string username)
+        {
+            var calificacion = await _recetaRepository.ObtenerCalificacionRecetaPorUsuario(recetaId, username);
+            if (calificacion is null)
+                return 0;
+            return calificacion.Puntaje;
+        }
     }
 }

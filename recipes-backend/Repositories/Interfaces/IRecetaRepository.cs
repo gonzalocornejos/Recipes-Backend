@@ -34,5 +34,7 @@
         ///     Receta individual.
         /// </returns>
         Task<Receta> BuscarRecetaByNameAndUsuario(Usuario usuario, string recetaName);
+
+        Task<Calificacion> ObtenerCalificacionRecetaPorUsuario(int recetaId, string userName);
     }
 }

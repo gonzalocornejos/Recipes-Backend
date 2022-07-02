@@ -241,22 +241,35 @@
         /// </summary>
         /// <param name="recetaId">Id de la receta a puntuar</param>
         /// <param name="puntaje">Puntaje</param>
+        /// <param name="username">Usuario que va a aplicar la valoracion</param>
         /// <response code="204">Si la receta fue puntuada correctamente</response>
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="404">Si no se encontro alguna entity</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPost]
-        [Route("puntuar/{recetaId}")]
+        [Route("puntuar/{recetaId}/{username}/{puntaje}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Puntuar([FromRoute, Required] int recetaId, [FromQuery, Required] int puntaje)
+        public async Task<IActionResult> Puntuar([FromRoute, Required] int recetaId, [FromRoute, Required] string username , [FromRoute, Required] int puntaje)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");
 
-            return StatusCode((int)HttpStatusCode.NotImplemented);
+            await _recetaService.Puntuar(recetaId, username, puntaje);
+            return NoContent();
+        }
+
+        [HttpGet]
+        [Route("puntaje/{userName}/{recetaId}")]
+        public async Task<IActionResult> ObtenerPuntajeRecetaPorUsuario([FromRoute, Required] int recetaId, [FromRoute, Required] string username)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Parametros enviados incorrectamente");
+
+            var puntaje = await _recetaService.ObtenerPuntajeRecetaPorUsuario(recetaId, username);
+            return Ok(puntaje);
         }
 
         /// <summary>

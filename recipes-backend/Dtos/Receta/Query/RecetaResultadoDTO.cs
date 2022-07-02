@@ -9,7 +9,7 @@
         public string Descripcion { get; set; }
         public int Porciones { get; set; }
         public string NickName { get; set; }
-        public double ValoracionPromedio { get; set; }
+        public decimal ValoracionPromedio { get; set; }
         public string FotoFinal { get; set; }
         public bool EsFavorito { get; set; }
     }

@@ -5,6 +5,7 @@
     using recipes_backend.Dtos.Utilizados;
     using recipes_backend.Models.Domain.Enums;
     using recipes_backend.Models.ORM;
+    using System;
     using System.Linq;
 
     public class Usuario : Entity
@@ -135,6 +136,11 @@
         public void CambiarContraseña(string nuevaContraseña)
         {
             Contraseña = nuevaContraseña;
+        }
+
+        public void CalificarReceta(Receta receta, int puntaje)
+        {
+            receta.SerPuntuada(this, puntaje);
         }
     }
 }

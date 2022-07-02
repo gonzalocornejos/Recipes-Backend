@@ -3,7 +3,6 @@
     using Dapper;
     using Microsoft.EntityFrameworkCore;
     using recipes_backend.Data;
-    using recipes_backend.Dtos.Foto;
     using recipes_backend.Dtos.Receta.Query;
     using recipes_backend.Helpers.Query;
     using recipes_backend.Models.Domain;
@@ -54,7 +53,7 @@
 	                                GROUP BY R.Id
                                 )
                                 SELECT R.Id AS RecipeId, R.Nombre, R.Descripcion, R.Porciones, R.Nickname,
-                                    CAST(ISNULL(VR.ValoracionPromedio, 0) AS INT) AS ValoracionPromedio, R.FotoFinal, R.EsFavorito                                 
+                                    CAST(ISNULL(VR.ValoracionPromedio, 0) AS DECIMAL(7,1)) AS ValoracionPromedio, R.FotoFinal, R.EsFavorito                                 
                                 FROM Recetas R
                                     LEFT JOIN ValoracionReceta VR ON VR.RecetaId = R.Id
                                 ORDER BY {pagedQuery.SortField} {pagedQuery.SortOrder}";
@@ -114,6 +113,15 @@
                .Where(r => r.Nombre == recetaName)
                .Where(r => r.Usuario == usuario)
                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Calificacion> ObtenerCalificacionRecetaPorUsuario(int recetaId, string userName)
+        {
+            return await _dbContext.Calificacion
+                .Include(c => c.Receta)
+                .Include(c => c.Usuario)
+                .Where(c => c.Usuario.NickName == userName && c.Receta.Id == recetaId)
+                .FirstOrDefaultAsync();
         }
     }
 }
