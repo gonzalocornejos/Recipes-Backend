@@ -5,9 +5,11 @@
     public interface IUsuarioService
     {
         Task Loguearse(LoguearseDTO credenciales);
-        Task RecuperarContraseña(int usuarioId);
+        Task RecuperarContraseña(string usuarioId);
         Task ChequearPrimerPasoRegistro(PrimerPasoRegistroDTO credencialesPrueba); 
         Task Registrarse(RegistroDTO credenciales);
         Task ActivarUsuario(string alias);
+        Task ChequearCodigoValidacion(string email, RecuperarContraseñaDTO recuperacionData);
+        Task CambiarContraseña(string email, CambiarContraseñaDTO cambiarContraseñaData);
     }
 }

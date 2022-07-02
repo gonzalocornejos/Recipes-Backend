@@ -20,6 +20,10 @@
 
         private string _contraseña;
 
+        /*   Lo ideal en este caso es tener una tabla con 
+         *   una relacion usuario - codigo - vencimiento */
+        private int? _codigoConfirmacion;
+
         public string Mail
         {
             get { return _mail; }
@@ -60,6 +64,12 @@
         {
             get { return _contraseña; }
             set { _contraseña = value; }
+        }
+
+        public int? CodigoValidacion
+        {
+            get { return _codigoConfirmacion; }
+            set { _codigoConfirmacion = value; }
         }
 
         public IReadOnlyList<Receta> Recetas => _recetas.ToList();
@@ -115,6 +125,16 @@
         public void ActivarUsuario()
         {
             Habilitado = true;
+        }
+
+        public void SetCodigoValidacion(int codigo)
+        {
+            CodigoValidacion = codigo;
+        }
+
+        public void CambiarContraseña(string nuevaContraseña)
+        {
+            Contraseña = nuevaContraseña;
         }
     }
 }
