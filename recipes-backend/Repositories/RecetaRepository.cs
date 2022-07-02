@@ -37,11 +37,11 @@
 		                                {Has(pagedQuery.Filter.Nombre, "AND R.Nombre LIKE '%' + @Nombre + '%'", "")}
                                         {Has(pagedQuery.Filter.TipoPlatos, "AND TP.Descripcion IN @TipoPlatos", "")}
                                         {Has(pagedQuery.Filter.Ingredientes, "AND I.Nombre IN @Ingredientes", "")}
-                                        {Has(pagedQuery.Filter.IngredientesExcluidos, @"AND I.Nombre NOT EXISTS (SELECT * 
-                                                                                                                FROM Utilizados U2
-                                                                                                                    INNER JOIN Ingrediente I2 ON I2.Id = U2.IngredienteId
-                                                                                                                WHERE U2.RecetaId = R.Id
-                                                                                                                    AND I2.Nombre IN @IngredientesExcluidos)", "")}
+                                        {Has(pagedQuery.Filter.IngredientesExcluidos, @"AND NOT EXISTS (SELECT * 
+                                                                                                        FROM Utilizados U2
+                                                                                                            INNER JOIN Ingrediente I2 ON I2.Id = U2.IngredienteId
+                                                                                                        WHERE U2.RecetaId = R.Id
+                                                                                                            AND I2.Nombre IN @IngredientesExcluidos)", "")}
                                         {Has(pagedQuery.Filter.NickName, "AND U.NickName LIKE '%' + @Nickname + '%'", "")}    
                                         {(pagedQuery.Filter.SoloFavoritos ? "AND F.Id IS NOT NULL" : "")}
                                     GROUP BY R.Id, R.Nombre, R.Descripcion, R.Porciones, R.Foto, U.NickName, F.Id
