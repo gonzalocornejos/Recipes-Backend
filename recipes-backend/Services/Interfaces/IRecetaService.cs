@@ -1,6 +1,5 @@
 ﻿namespace recipes_backend.Services.Interfaces
 {
-    using CSharpFunctionalExtensions;
     using recipes_backend.Dtos.Receta;
     using recipes_backend.Dtos.Receta.Query;
     using recipes_backend.Helpers.Query;
@@ -59,5 +58,9 @@
         Task<bool> VerificarNombreRecetaExsitente(string nickName, string nombreReceta);
         Task<RecetaInfoDTO> ObtenerRecetaInfoByNombre(string nickName, string nombreReceta);
         Task SobreescribirReceta(string userName, CrearRecetaDTO recetaDTO);
+
+        Task Puntuar(int recetaId, string username, int puntaje);
+
+        Task<int> ObtenerPuntajeRecetaPorUsuario(int recetaId, string username);
     }
 }

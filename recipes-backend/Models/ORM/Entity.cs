@@ -24,7 +24,7 @@
             return Id == other.Id;
         }
 
-        public static bool operator ==(Entity a, Entity b)
+        public static bool operator ==(Entity? a, Entity? b)
         {
             if (a is null && b is null)
                 return true;

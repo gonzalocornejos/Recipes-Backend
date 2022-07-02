@@ -3,6 +3,7 @@
     using recipes_backend.Dtos.Paso;
     using recipes_backend.Dtos.Utilizados;
     using recipes_backend.Models.ORM;
+    using System;
 
     public class Receta : Entity
     {
@@ -128,6 +129,11 @@
             AgregarPasos(pasosDTO);
             AgregarTiposPlato(tipoPlatos);
             AgregarIngredientes(ingredientes);
+        }
+
+        public void SerPuntuada(Usuario usuario, int puntaje)
+        {
+            _calificaciones.Add(new Calificacion(usuario, this, puntaje, ""));
         }
     }
 }
