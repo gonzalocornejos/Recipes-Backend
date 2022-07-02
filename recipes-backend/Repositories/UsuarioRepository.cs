@@ -44,7 +44,7 @@
         public async Task<Usuario> BuscarUsuarioPorMail(string email)
         {
             var usuario = await _dbContext.Usuario
-                .Where(u => u.NickName == email)
+                .Where(u => u.Mail == email.Trim())
                 .FirstOrDefaultAsync();
             return usuario;
         }

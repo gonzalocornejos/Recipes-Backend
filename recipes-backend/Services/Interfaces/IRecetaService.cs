@@ -43,12 +43,12 @@
         ///     Busca al usuario para luego darle la responsabilidad 
         ///     de eliminar su receta.
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="userName"></param>
         /// <param name="recetaId"></param>
         /// <returns>
         ///     Resultado Success o Fail del proceso
         /// </returns>
-        Task EliminarReceta(int userId, int recetaId);
+        Task EliminarReceta(string userName, int recetaId);
 
         Task ManejarFavorito(string nickName, int recetaId);
 

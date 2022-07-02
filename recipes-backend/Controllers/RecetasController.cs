@@ -49,7 +49,7 @@
         /// <summary>
         ///     Elimina la receta.
         /// </summary>
-        /// <param name="usuarioId">Id del usuario que eliminará la receta</param>
+        /// <param name="userName">Id del usuario que eliminará la receta</param>
         /// <param name="recetaId">Id de la receta a eliminar</param>
         /// <response code="204">Si la receta pudo ser eliminada correctamente</response>        
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
@@ -63,12 +63,12 @@
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> EliminarReceta([FromRoute, Required] int usuarioId, [FromRoute, Required] int recetaId)
+        public async Task<IActionResult> EliminarReceta([FromRoute, Required] string userName, [FromRoute, Required] int recetaId)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");
 
-            await _recetaService.EliminarReceta(usuarioId, recetaId);
+            await _recetaService.EliminarReceta(userName, recetaId);
             return NoContent();
         }
 

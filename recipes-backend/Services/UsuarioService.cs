@@ -32,21 +32,28 @@
                 throw new AppException("Credenciales no validas", HttpStatusCode.Unauthorized);           
         }
 
-        public async Task RecuperarContraseña(int usuarioId)
+        public async Task RecuperarContraseña(string mail)
         {
-            var usuario = await _usuarioRepository.BuscarUsuario(usuarioId);
+            var usuario = await _usuarioRepository.BuscarUsuarioPorMail(mail);
             if (usuario == null)
-                throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
-
-            // TODO: Agregar campo en usuario o una tabla nueva con el ultimo
-            // codigo de validacion.
+                throw new AppException("Correo electronico no encontrado", HttpStatusCode.NotFound);
 
             int nuevoCodigoValidacion = new Random().Next(100000,999999);
-            // Setear el nuevo codigo de validacion en la nueva tabla/campo.
+            usuario.SetCodigoValidacion(nuevoCodigoValidacion);
 
             await _genericRepository.GuardarCambiosAsync();
 
-            await _mailingService.EnviarCodigoValidacion(usuario.Mail, nuevoCodigoValidacion);
+            await _mailingService.EnviarCodigoValidacion(usuario.Mail, usuario.CodigoValidacion.Value);
+        }
+
+        public async Task ChequearCodigoValidacion(string email, RecuperarContraseñaDTO recuperacionData)
+        {
+            var usuario = await _usuarioRepository.BuscarUsuarioPorMail(email);
+            if (usuario == null)
+                throw new AppException("Usuario no encontrado", HttpStatusCode.NotFound);
+
+            if (usuario.CodigoValidacion != recuperacionData.CodigoValidacion)
+                throw new AppException("El codigo de validacion no coincide con el enviado al mail", HttpStatusCode.BadRequest);
         }
 
         public async Task Registrarse(RegistroDTO credenciales)
@@ -65,11 +72,29 @@
         {
             var usuarioEmail = await _usuarioRepository.BuscarUsuarioPorMail(credencialesPrueba.Email.Trim());
             if (usuarioEmail != null)
-                throw new AppException("El email ya existe", HttpStatusCode.BadRequest);
+                throw new AppException("El email ya esta en uso", HttpStatusCode.BadRequest);
 
-            var usuarioNickname = await _usuarioRepository.BuscarUsuario(credencialesPrueba.Alias);
+            var usuarioNickname = await _usuarioRepository.BuscarUsuario(credencialesPrueba.Alias.Trim());
             if (usuarioNickname != null)
-                throw new AppException("El alias ya existe", HttpStatusCode.BadRequest);            
+            {
+                var aliasSugeridos = await ObtenerAliasSugeridos(3, credencialesPrueba.Alias.Trim());
+                throw new AppException($"El alias {credencialesPrueba.Alias.Trim()} ya esta en uso, puedes probar con {String.Join(", ", aliasSugeridos.ToArray())} ", HttpStatusCode.BadRequest);
+            }                     
+        }
+
+        private async Task<List<string>> ObtenerAliasSugeridos(int cantidadAlias, string aliasOrigen)
+        {
+            var alias = new List<string>();
+            while (cantidadAlias > 0)
+            {
+                var newAlias = $"{aliasOrigen}{new Random().Next(9999)}";
+                if(await _usuarioRepository.BuscarUsuario(newAlias) == null)
+                {
+                    alias.Add(newAlias);
+                    cantidadAlias--;
+                }
+            }
+            return alias;
         }
 
         public async Task ActivarUsuario(string alias)
@@ -78,6 +103,16 @@
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
             usuario.ActivarUsuario();
+            await _genericRepository.GuardarCambiosAsync();
+        }
+
+        public async Task CambiarContraseña(string email, CambiarContraseñaDTO cambiarContraseñaData)
+        {
+            var usuario = await _usuarioRepository.BuscarUsuarioPorMail(email);
+            if (usuario == null)
+                throw new AppException("Usuario no encontrado", HttpStatusCode.NotFound);
+
+            usuario.CambiarContraseña(cambiarContraseñaData.NuevaContraseña);
             await _genericRepository.GuardarCambiosAsync();
         }
     }

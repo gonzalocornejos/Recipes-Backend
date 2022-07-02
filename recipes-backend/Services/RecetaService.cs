@@ -116,9 +116,9 @@
             return _mapper.Map<RecetaInfoDTO>(receta);
         }
 
-        public async Task EliminarReceta(int userId, int recetaId)
+        public async Task EliminarReceta(string userName, int recetaId)
         {
-            var usuario = await _usuarioRepository.BuscarUsuario(userId);
+            var usuario = await _usuarioRepository.BuscarUsuario(userName);
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
