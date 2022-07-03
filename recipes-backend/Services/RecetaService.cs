@@ -67,7 +67,7 @@
             var tiposPlato = new List<TipoPlato>();
             foreach (var categoria in recetaDTO.Categorias)
             {
-                tiposPlato.Add( await _tipoPlatoRepository.BuscarTipoPlato(categoria.Categoria.Id));
+                tiposPlato.Add(await _tipoPlatoRepository.BuscarTipoPlato(categoria.Categoria.Id));
             }
             if (tiposPlato == null)
                 throw new AppException("Tipo de plato invalido", HttpStatusCode.NotFound);
@@ -101,7 +101,8 @@
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
-            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario, recetaEditDTO.Nombre);
+            // Buscar por id
+            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario.NickName, recetaEditDTO.Nombre);
             if (receta == null)
                 throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
 
@@ -128,7 +129,7 @@
                 var unidad = await _unidadRepository.ObtenerUnidadById(ingrediente.Unidad);
 
                 if (unidad == null)
-                    throw new AppException("Unidad invalida", HttpStatusCode.NotFound);
+                    continue;
 
                 utilizados.Add(new UtilizadoDTO(newIngrediente, Int32.Parse(ingrediente.Cantidad), unidad, ingrediente.Descripcion));
 
@@ -203,7 +204,7 @@
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
-            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario, nombreReceta);
+            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario.NickName, nombreReceta);
             if (receta == null) 
                 return false;
             return true;
@@ -215,7 +216,7 @@
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
-            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario, nombreReceta);
+            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario.NickName, nombreReceta);
 
             return new RecetaInfoDTO(receta);
         }
@@ -225,7 +226,7 @@
             var usuario = await _usuarioRepository.BuscarUsuario(userName);
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
-            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario, recetaDTO.Nombre);
+            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario.NickName, recetaDTO.Nombre);
             await EliminarReceta(usuario.NickName, receta.Id);
             await CrearReceta(userName, recetaDTO);
         }

@@ -26,6 +26,15 @@
         Task<Receta> BuscarReceta(int recetaId);
 
         /// <summary>
+        ///     Busca la receta teniendo en cuenta el propietario
+        /// </summary>
+        /// <param name="recetaId"></param>
+        /// <returns>
+        ///     Receta individual.
+        /// </returns>
+        Task<Receta> BuscarReceta(int recetaId, string userName);
+
+        /// <summary>
         ///     Busca en la base de datos su nombre y el usuario.
         /// </summary>
         /// <param name="usuario"></param>
@@ -33,7 +42,7 @@
         /// <returns>
         ///     Receta individual.
         /// </returns>
-        Task<Receta> BuscarRecetaByNameAndUsuario(Usuario usuario, string recetaName);
+        Task<Receta> BuscarRecetaByNameAndUsuario(string userName, string recetaName);
 
         Task<Calificacion> ObtenerCalificacionRecetaPorUsuario(int recetaId, string userName);
     }

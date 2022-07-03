@@ -97,7 +97,7 @@
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<Receta> BuscarRecetaByNameAndUsuario(Usuario usuario, string recetaName)
+        public async Task<Receta> BuscarRecetaByNameAndUsuario(string userName, string recetaName)
         {
             return await _dbContext.Receta
                .Include(r => r.Usuario)
@@ -110,8 +110,7 @@
                    .ThenInclude(i => i.Ingrediente)
                .Include(r => r.Pasos)
                    .ThenInclude(p => p.Multimedias)
-               .Where(r => r.Nombre == recetaName)
-               .Where(r => r.Usuario == usuario)
+               .Where(r => r.Nombre == recetaName && r.Usuario.NickName == userName)
                .FirstOrDefaultAsync();
         }
 
@@ -122,6 +121,23 @@
                 .Include(c => c.Usuario)
                 .Where(c => c.Usuario.NickName == userName && c.Receta.Id == recetaId)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<Receta> BuscarReceta(int recetaId, string userName)
+        {
+            return await _dbContext.Receta
+               .Include(r => r.Usuario)
+               .Include(r => r.TiposPlato)
+                   .ThenInclude(tp => tp.TipoPlato)
+               .Include(r => r.Calificaciones)
+               .Include(r => r.Ingredientes)
+                   .ThenInclude(i => i.Unidad)
+               .Include(r => r.Ingredientes)
+                   .ThenInclude(i => i.Ingrediente)
+               .Include(r => r.Pasos)
+                   .ThenInclude(p => p.Multimedias)
+               .Where(r => r.Id == recetaId && r.Usuario.NickName == userName)
+               .FirstOrDefaultAsync();
         }
     }
 }
