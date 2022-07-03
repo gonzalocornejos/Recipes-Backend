@@ -101,8 +101,7 @@
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
-            // Buscar por id
-            var receta = await _recetaRepository.BuscarReceta(recetaId);
+            var receta = await _recetaRepository.BuscarReceta(recetaId, usuarioName);
             if (receta == null)
                 throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
 
