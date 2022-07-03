@@ -57,7 +57,7 @@
         /// <response code="404">Si alguna entity no fue encontrada</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpDelete]
-        [Route("{usuarioId}/{recetaId}")]
+        [Route("{userName}/{recetaId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
