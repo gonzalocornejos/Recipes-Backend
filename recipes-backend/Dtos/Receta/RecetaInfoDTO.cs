@@ -7,6 +7,7 @@
 
     public class RecetaInfoDTO
     {
+        public int Id { get; set; }
         public string Imagen { get; set; }
         public string Nombre { get; set; }
         public string NombreUsuario { get; set; }
@@ -19,6 +20,7 @@
 
         public RecetaInfoDTO(Receta recipe)
         {
+            Id = recipe.Id;
             Imagen = recipe.Foto;
             Nombre = recipe.Nombre;
             NombreUsuario = recipe.Usuario.NickName;

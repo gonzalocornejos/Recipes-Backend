@@ -36,7 +36,7 @@
         /// </returns>
         Task CrearReceta(string userId, CrearRecetaDTO recetaDTO);
 
-        Task<RecetaInfoDTO> EditarReceta(string usuarioName, CrearRecetaDTO recetaEditDTO);
+        Task<RecetaInfoDTO> EditarReceta(string usuarioName, int recetaId, CrearRecetaDTO recetaEditDTO);
 
         /// <summary>
         ///     Busca al usuario para luego darle la responsabilidad 

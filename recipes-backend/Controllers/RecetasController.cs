@@ -79,23 +79,24 @@
         ///     El modelo de la receta editada.
         /// </returns>
         /// <param name="usuarioName">Id del usuario propietario de la receta</param>
+        /// <param name="recipeId">Id del usuario propietario de la receta</param>
         /// <param name="recetaEditDTO">Datos a cambiar de la receta</param>
         /// <response code="200">Si la receta pudo ser editada correctamente</response>
         /// <response code="400">Si no se enviaron correctamente los parametros requeridos</response>
         /// <response code="404">Si alguna entity no fue encontrada</response>
         /// <response code="500">En el caso de haber un problema interno en el codigo</response>
         [HttpPatch]
-        [Route("editar/{usuarioName}")]
+        [Route("editar/{usuarioName}/{recipeId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> EditarReceta([FromRoute, Required] string usuarioName,[FromBody] CrearRecetaDTO recetaEditDTO)
+        public async Task<IActionResult> EditarReceta([FromRoute, Required] string usuarioName, [FromRoute, Required] int recipeId, [FromBody] CrearRecetaDTO recetaEditDTO)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Parametros enviados incorrectamente");
 
-            var recetaEditada = await _recetaService.EditarReceta(usuarioName, recetaEditDTO);
+            var recetaEditada = await _recetaService.EditarReceta(usuarioName, recipeId,recetaEditDTO);
             return Ok(recetaEditada);
         }
 

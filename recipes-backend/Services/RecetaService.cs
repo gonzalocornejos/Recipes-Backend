@@ -95,14 +95,14 @@
             await _genericRepository.GuardarCambiosAsync();
         }
 
-        public async Task<RecetaInfoDTO> EditarReceta(string usuarioName, CrearRecetaDTO recetaEditDTO)
+        public async Task<RecetaInfoDTO> EditarReceta(string usuarioName, int recetaId,CrearRecetaDTO recetaEditDTO)
         {
             var usuario = await _usuarioRepository.BuscarUsuario(usuarioName);
             if (usuario == null)
                 throw new AppException("Usuario Invalido", HttpStatusCode.NotFound);
 
             // Buscar por id
-            var receta = await _recetaRepository.BuscarRecetaByNameAndUsuario(usuario.NickName, recetaEditDTO.Nombre);
+            var receta = await _recetaRepository.BuscarReceta(recetaId);
             if (receta == null)
                 throw new AppException("Receta Invalida", HttpStatusCode.NotFound);
 
